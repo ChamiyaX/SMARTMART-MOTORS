@@ -37,6 +37,10 @@ const config: Config = {
           800: "#660300",
           900: "#3D0200",
         },
+        "brand-teal": {
+          DEFAULT: "#14B8A6",
+          foreground: "#042F2E",
+        },
         secondary: {
           DEFAULT: "#111111",
           foreground: "#FFFFFF",
@@ -82,8 +86,11 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        glass: "0 8px 32px rgba(17, 17, 17, 0.12)",
-        "glass-lg": "0 16px 48px rgba(17, 17, 17, 0.18)",
+        glass: "0 8px 32px rgba(0, 0, 0, 0.45)",
+        "glass-lg": "0 16px 48px rgba(0, 0, 0, 0.55)",
+        premium: "0 24px 80px rgba(0, 0, 0, 0.55)",
+        glow: "0 0 20px rgba(225, 6, 0, 0.4)",
+        "glow-lg": "0 0 36px rgba(225, 6, 0, 0.55)",
       },
       backdropBlur: {
         glass: "16px",
@@ -139,18 +146,31 @@ const config: Config = {
     }) {
       addUtilities({
         ".glass": {
-          background: "rgba(255, 255, 255, 0.72)",
-          "backdrop-filter": "blur(16px)",
-          "-webkit-backdrop-filter": "blur(16px)",
-          border: "1px solid rgba(255, 255, 255, 0.35)",
-          "box-shadow": "0 8px 32px rgba(17, 17, 17, 0.08)",
+          background: "rgba(12, 12, 12, 0.82)",
+          "backdrop-filter": "blur(18px)",
+          "-webkit-backdrop-filter": "blur(18px)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
+          "box-shadow": "0 24px 80px rgba(0, 0, 0, 0.55)",
         },
         ".glass-dark": {
-          background: "rgba(17, 17, 17, 0.72)",
-          "backdrop-filter": "blur(16px)",
-          "-webkit-backdrop-filter": "blur(16px)",
+          background: "rgba(10, 10, 10, 0.9)",
+          "backdrop-filter": "blur(20px)",
+          "-webkit-backdrop-filter": "blur(20px)",
+          border: "1px solid rgba(255, 255, 255, 0.12)",
+          "box-shadow": "0 24px 80px rgba(0, 0, 0, 0.6)",
+        },
+        ".glass-subtle": {
+          background: "rgba(17, 17, 17, 0.55)",
+          "backdrop-filter": "blur(12px)",
+          "-webkit-backdrop-filter": "blur(12px)",
           border: "1px solid rgba(255, 255, 255, 0.08)",
-          "box-shadow": "0 8px 32px rgba(0, 0, 0, 0.35)",
+        },
+        ".glass-strong": {
+          background: "rgba(8, 8, 8, 0.88)",
+          "backdrop-filter": "blur(24px)",
+          "-webkit-backdrop-filter": "blur(24px)",
+          border: "1px solid rgba(255, 255, 255, 0.14)",
+          "box-shadow": "0 24px 80px rgba(0, 0, 0, 0.55)",
         },
       });
     },

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone, Zap } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -50,14 +51,7 @@ export function Footer() {
     <footer className="mt-24 border-t border-white/10 bg-secondary/80 backdrop-blur-xl">
       <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/40 bg-primary/15 text-primary">
-              <Zap className="h-5 w-5 fill-primary" />
-            </span>
-            <span className="font-display text-lg font-bold text-white">
-              SmartMart<span className="text-primary"> Motors</span>
-            </span>
-          </Link>
+          <BrandLogo height={48} className="max-w-[220px]" />
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
             Premium automotive parts and accessories — performance you can trust, crafted
             for Sri Lankan roads.
@@ -66,14 +60,14 @@ export function Footer() {
             <a
               href="#"
               aria-label="Facebook"
-              className="hover:shadow-glow rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary"
+              className="rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary hover:shadow-glow"
             >
               <FacebookIcon className="h-4 w-4" />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              className="hover:shadow-glow rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary"
+              className="rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary hover:shadow-glow"
             >
               <InstagramIcon className="h-4 w-4" />
             </a>

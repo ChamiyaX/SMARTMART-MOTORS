@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { LoginForm } from "@/components/admin/login-form";
+import { BrandLogo } from "@/components/shared/brand-logo";
 import { SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -20,22 +21,16 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0a] px-4 py-12">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(225,6,0,0.22),_transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(20,184,166,0.12),_transparent_45%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
 
       <div className="relative w-full max-w-md animate-fade-up">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex flex-col items-center gap-3">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-[0_0_40px_rgba(225,6,0,0.45)]">
-              SM
-            </span>
-            <div>
-              <p className="font-display text-xl uppercase tracking-[0.28em] text-white">
-                SmartMart Motors
-              </p>
-              <p className="mt-1 text-xs uppercase tracking-[0.2em] text-white/40">
-                Secure Admin Access
-              </p>
-            </div>
+            <BrandLogo href={null} height={64} priority className="max-w-[260px]" />
+            <p className="text-xs uppercase tracking-[0.2em] text-white/40">
+              Secure Admin Access
+            </p>
           </Link>
         </div>
 

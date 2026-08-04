@@ -4,9 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Phone, X, Zap } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -37,18 +38,15 @@ export function Navbar() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-all duration-300",
-        scrolled ? "glass-strong py-2" : "bg-transparent py-4"
+        scrolled ? "py-2 glass-strong" : "bg-transparent py-4"
       )}
     >
       <div className="container flex items-center justify-between gap-4">
-        <Link href="/" className="group flex items-center gap-2">
-          <span className="shadow-glow group-hover:shadow-glow-lg flex h-10 w-10 items-center justify-center rounded-lg border border-primary/40 bg-primary/15 text-primary transition-all">
-            <Zap className="h-5 w-5 fill-primary" />
-          </span>
-          <span className="font-display text-lg font-bold tracking-wide text-white sm:text-xl">
-            SmartMart<span className="text-primary"> Motors</span>
-          </span>
-        </Link>
+        <BrandLogo
+          height={scrolled ? 34 : 42}
+          priority
+          className="max-w-[min(220px,52vw)]"
+        />
 
         <nav className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => {
@@ -102,7 +100,7 @@ export function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden border-t border-white/10 lg:hidden"
           >
-            <div className="glass-strong container space-y-2 py-4">
+            <div className="container space-y-2 py-4 glass-strong">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}

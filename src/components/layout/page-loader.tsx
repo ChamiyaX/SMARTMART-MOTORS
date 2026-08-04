@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Zap } from "lucide-react";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 export function PageLoader() {
   const [visible, setVisible] = React.useState(true);
 
   React.useEffect(() => {
-    const timer = window.setTimeout(() => setVisible(false), 1600);
+    const timer = window.setTimeout(() => setVisible(false), 1800);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -21,22 +21,23 @@ export function PageLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.45 }}
         >
-          <div className="mb-8 flex flex-col items-center gap-4">
+          <div className="mb-8 flex flex-col items-center gap-5">
             <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="shadow-glow flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/50 bg-primary/20 text-primary"
+              initial={{ scale: 0.85, opacity: 0, y: 12 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
             >
-              <Zap className="h-8 w-8 fill-primary" />
+              <BrandLogo
+                href={null}
+                height={72}
+                priority
+                className="max-w-[280px] sm:max-w-[340px]"
+              />
             </motion.div>
-            <h1 className="animate-logo-reveal font-display text-2xl font-bold tracking-[0.08em] text-white sm:text-3xl">
-              SmartMart<span className="text-primary"> Motors</span>
-            </h1>
           </div>
 
           <div className="h-1 w-48 overflow-hidden rounded-full bg-white/10 sm:w-64">
-            <div className="animate-loader-bar shadow-glow h-full w-full origin-left rounded-full bg-gradient-to-r from-primary via-[#ff1a1a] to-primary" />
+            <div className="animate-loader-bar h-full w-full origin-left rounded-full bg-gradient-to-r from-primary via-brand-teal to-primary shadow-glow" />
           </div>
         </motion.div>
       )}

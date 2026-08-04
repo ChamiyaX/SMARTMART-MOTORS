@@ -25,6 +25,7 @@ import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -86,18 +87,18 @@ export function AdminSidebar({ user, open, onClose }: AdminSidebarProps) {
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
-          <Link href="/admin" className="flex items-center gap-2" onClick={onClose}>
-            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-xs font-bold text-white">
-              SM
-            </span>
-            <div>
-              <p className="font-display text-[11px] uppercase tracking-[0.2em] text-white">
-                SmartMart
-              </p>
-              <p className="text-[10px] text-white/40">Admin Console</p>
-            </div>
-          </Link>
+        <div className="flex h-16 items-center justify-between border-b border-white/10 px-4">
+          <div className="min-w-0 flex-1">
+            <BrandLogo
+              href="/admin"
+              height={34}
+              className="max-w-[150px]"
+              onClick={onClose}
+            />
+            <p className="mt-0.5 pl-0.5 text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Admin Console
+            </p>
+          </div>
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>

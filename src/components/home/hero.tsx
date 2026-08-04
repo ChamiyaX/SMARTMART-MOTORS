@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 export function Hero() {
   return (
@@ -22,15 +23,20 @@ export function Hero() {
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050505] to-transparent" />
 
       <div className="container relative z-10 flex min-h-[100svh] flex-col justify-center pb-20 pt-28">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-4 font-display text-5xl font-black tracking-tight text-white sm:text-7xl md:text-8xl lg:text-9xl"
+        <motion.div
+          initial={{ opacity: 0, y: 18, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.55 }}
+          className="mb-8"
         >
-          SmartMart
-          <span className="text-gradient-animated block">Motors</span>
-        </motion.p>
+          <BrandLogo
+            href={null}
+            height={120}
+            priority
+            className="w-auto max-w-[min(92vw,560px)] drop-shadow-[0_0_40px_rgba(225,6,0,0.35)] md:max-w-[640px]"
+          />
+          <span className="sr-only">SmartMart Motors</span>
+        </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -47,8 +53,8 @@ export function Hero() {
           transition={{ duration: 0.55, delay: 0.22 }}
           className="mt-4 max-w-lg text-base text-white/70 sm:text-lg"
         >
-          Premium automotive components curated for drivers who demand quality,
-          reliability, and craftsmanship.
+          Genuine vehicle spare parts imported from China — delivered across Sri Lanka
+          with trust and speed.
         </motion.p>
 
         <motion.div
