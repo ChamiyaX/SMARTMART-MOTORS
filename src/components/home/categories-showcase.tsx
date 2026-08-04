@@ -25,6 +25,7 @@ export function CategoriesShowcase({ categories }: CategoriesShowcaseProps) {
           <FadeIn key={category.id} delay={index * 0.06}>
             <Link
               href={`/categories/${category.slug}`}
+              prefetch
               className={cn(
                 "group relative block aspect-[16/10] overflow-hidden rounded-xl border border-white/10"
               )}

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Prisma, StockStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
@@ -16,7 +17,17 @@ export type ProductListParams = {
   sort?: "newest" | "price_asc" | "price_desc" | "popular" | "name";
 };
 
-const productInclude = {
+/** Lightweight include for catalogue grids — primary image only. */
+const productListInclude = {
+  category: { select: { id: true, name: true, slug: true } },
+  brand: { select: { id: true, name: true, slug: true } },
+  images: {
+    orderBy: [{ isPrimary: "desc" as const }, { sortOrder: "asc" as const }],
+    take: 1,
+  },
+} satisfies Prisma.ProductInclude;
+
+const productDetailInclude = {
   category: true,
   brand: true,
   images: {
@@ -25,7 +36,7 @@ const productInclude = {
 } satisfies Prisma.ProductInclude;
 
 export type ProductWithRelations = Prisma.ProductGetPayload<{
-  include: typeof productInclude;
+  include: typeof productDetailInclude;
 }>;
 
 function buildOrderBy(
@@ -85,7 +96,7 @@ export async function getProducts(params: ProductListParams = {}) {
   const [items, total] = await Promise.all([
     prisma.product.findMany({
       where,
-      include: productInclude,
+      include: productListInclude,
       orderBy: buildOrderBy(sort),
       skip,
       take: pageSize,
@@ -102,24 +113,24 @@ export async function getProducts(params: ProductListParams = {}) {
   };
 }
 
-export async function getProductBySlug(slug: string) {
+export const getProductBySlug = cache(async (slug: string) => {
   return prisma.product.findFirst({
     where: { slug, isActive: true },
-    include: productInclude,
+    include: productDetailInclude,
   });
-}
+});
 
 export async function getProductById(id: string) {
   return prisma.product.findUnique({
     where: { id },
-    include: productInclude,
+    include: productDetailInclude,
   });
 }
 
 export async function getFeaturedProducts(limit = 8) {
   return prisma.product.findMany({
     where: { isActive: true, isFeatured: true },
-    include: productInclude,
+    include: productListInclude,
     orderBy: { updatedAt: "desc" },
     take: limit,
   });
@@ -128,7 +139,7 @@ export async function getFeaturedProducts(limit = 8) {
 export async function getNewArrivals(limit = 8) {
   return prisma.product.findMany({
     where: { isActive: true, isNewArrival: true },
-    include: productInclude,
+    include: productListInclude,
     orderBy: { createdAt: "desc" },
     take: limit,
   });
@@ -137,7 +148,7 @@ export async function getNewArrivals(limit = 8) {
 export async function getPopularProducts(limit = 8) {
   return prisma.product.findMany({
     where: { isActive: true, isPopular: true },
-    include: productInclude,
+    include: productListInclude,
     orderBy: [{ inquiryCount: "desc" }, { viewCount: "desc" }],
     take: limit,
   });
@@ -154,7 +165,7 @@ export async function getRelatedProducts(
       categoryId,
       NOT: { id: productId },
     },
-    include: productInclude,
+    include: productListInclude,
     orderBy: { isFeatured: "desc" },
     take: limit,
   });

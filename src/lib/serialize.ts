@@ -23,25 +23,25 @@ export function serializeBrand(brand: {
   id: string;
   name: string;
   slug: string;
-  logo: string | null;
-  description: string | null;
-  website: string | null;
-  isActive: boolean;
-  sortOrder: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  logo?: string | null;
+  description?: string | null;
+  website?: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }): Brand {
   return {
     id: brand.id,
     name: brand.name,
     slug: brand.slug,
-    logo: brand.logo,
-    description: brand.description,
-    website: brand.website,
-    isActive: brand.isActive,
-    sortOrder: brand.sortOrder,
-    createdAt: toIso(brand.createdAt),
-    updatedAt: toIso(brand.updatedAt),
+    logo: brand.logo ?? null,
+    description: brand.description ?? null,
+    website: brand.website ?? null,
+    isActive: brand.isActive ?? true,
+    sortOrder: brand.sortOrder ?? 0,
+    createdAt: brand.createdAt ? toIso(brand.createdAt) : "",
+    updatedAt: brand.updatedAt ? toIso(brand.updatedAt) : "",
   };
 }
 
@@ -49,29 +49,29 @@ export function serializeCategory(category: {
   id: string;
   name: string;
   slug: string;
-  description: string | null;
-  image: string | null;
-  parentId: string | null;
-  isActive: boolean;
-  sortOrder: number;
-  seoTitle: string | null;
-  seoDescription: string | null;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  description?: string | null;
+  image?: string | null;
+  parentId?: string | null;
+  isActive?: boolean;
+  sortOrder?: number;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }): Category {
   return {
     id: category.id,
     name: category.name,
     slug: category.slug,
-    description: category.description,
-    image: category.image,
-    parentId: category.parentId,
-    isActive: category.isActive,
-    sortOrder: category.sortOrder,
-    seoTitle: category.seoTitle,
-    seoDescription: category.seoDescription,
-    createdAt: toIso(category.createdAt),
-    updatedAt: toIso(category.updatedAt),
+    description: category.description ?? null,
+    image: category.image ?? null,
+    parentId: category.parentId ?? null,
+    isActive: category.isActive ?? true,
+    sortOrder: category.sortOrder ?? 0,
+    seoTitle: category.seoTitle ?? null,
+    seoDescription: category.seoDescription ?? null,
+    createdAt: category.createdAt ? toIso(category.createdAt) : "",
+    updatedAt: category.updatedAt ? toIso(category.updatedAt) : "",
   };
 }
 

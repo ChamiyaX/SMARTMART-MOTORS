@@ -41,6 +41,7 @@ export default async function CategoriesPage() {
             <FadeIn key={category.id} delay={index * 0.05}>
               <Link
                 href={`/categories/${category.slug}`}
+                prefetch
                 className="group relative block aspect-[16/10] overflow-hidden rounded-xl border border-white/10"
               >
                 {category.image ? (

@@ -1,17 +1,21 @@
+import { cache } from "react";
+
 import { prisma } from "@/lib/prisma";
 
-export async function getCategories(options: { includeInactive?: boolean } = {}) {
-  return prisma.category.findMany({
-    where: options.includeInactive ? undefined : { isActive: true },
-    include: {
-      parent: true,
-      _count: { select: { products: { where: { isActive: true } } } },
-    },
-    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-  });
-}
+export const getCategories = cache(
+  async (options: { includeInactive?: boolean } = {}) => {
+    return prisma.category.findMany({
+      where: options.includeInactive ? undefined : { isActive: true },
+      include: {
+        parent: true,
+        _count: { select: { products: { where: { isActive: true } } } },
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    });
+  }
+);
 
-export async function getCategoryBySlug(slug: string) {
+export const getCategoryBySlug = cache(async (slug: string) => {
   return prisma.category.findFirst({
     where: { slug, isActive: true },
     include: {
@@ -23,7 +27,7 @@ export async function getCategoryBySlug(slug: string) {
       _count: { select: { products: { where: { isActive: true } } } },
     },
   });
-}
+});
 
 export async function getCategoryById(id: string) {
   return prisma.category.findUnique({
@@ -35,7 +39,7 @@ export async function getCategoryById(id: string) {
   });
 }
 
-export async function getRootCategories() {
+export const getRootCategories = cache(async () => {
   return prisma.category.findMany({
     where: { isActive: true, parentId: null },
     include: {
@@ -47,4 +51,4 @@ export async function getRootCategories() {
     },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
   });
-}
+});

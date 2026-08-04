@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { CatalogSkeleton } from "@/components/products/catalog-skeleton";
 import { ProductsBrowser } from "@/components/products/products-browser";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -40,24 +41,17 @@ export async function generateMetadata({
   });
 }
 
-export default async function CategoryDetailPage({
-  params,
-  searchParams,
+async function CategoryProducts({
+  slug,
+  page,
+  q,
+  brandSlug,
 }: {
-  params: Params;
-  searchParams: SearchParams;
+  slug: string;
+  page: number;
+  q: string;
+  brandSlug: string;
 }) {
-  const { slug } = await params;
-  const sp = await searchParams;
-  const page = Math.max(1, Number(first(sp.page) || "1") || 1);
-  const q = first(sp.q) || "";
-  const brandSlug = first(sp.brand) || "";
-
-  const categoryRaw = await safeQuery(() => getCategoryBySlug(slug), null);
-  if (!categoryRaw) notFound();
-
-  const category = serializeCategory(categoryRaw);
-
   const emptyResult = {
     items: [],
     total: 0,
@@ -66,7 +60,9 @@ export default async function CategoryDetailPage({
     totalPages: 1,
   };
 
-  const [result, brandsRaw] = await Promise.all([
+  // Parallel — React cache() dedupes category lookup with generateMetadata
+  const [categoryRaw, result, brandsRaw] = await Promise.all([
+    safeQuery(() => getCategoryBySlug(slug), null),
     safeQuery(
       () =>
         getProducts({
@@ -81,6 +77,9 @@ export default async function CategoryDetailPage({
     safeQuery(() => getBrands(), []),
   ]);
 
+  if (!categoryRaw) notFound();
+
+  const category = serializeCategory(categoryRaw);
   const brands = brandsRaw.map(serializeBrand);
   const products = serializeProducts(result.items);
 
@@ -92,6 +91,36 @@ export default async function CategoryDetailPage({
     minPrice: "",
     maxPrice: "",
   };
+
+  return (
+    <ProductsBrowser
+      products={products}
+      categories={[category]}
+      brands={brands}
+      page={result.page}
+      totalPages={result.totalPages}
+      initialFilters={initialFilters}
+    />
+  );
+}
+
+export default async function CategoryDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const { slug } = await params;
+  const sp = await searchParams;
+  const page = Math.max(1, Number(first(sp.page) || "1") || 1);
+  const q = first(sp.q) || "";
+  const brandSlug = first(sp.brand) || "";
+
+  // Fast shell header from cached category (deduped with metadata / content)
+  const categoryRaw = await safeQuery(() => getCategoryBySlug(slug), null);
+  if (!categoryRaw) notFound();
+  const category = serializeCategory(categoryRaw);
 
   return (
     <div className="container pb-20 pt-28">
@@ -122,15 +151,8 @@ export default async function CategoryDetailPage({
         }
         align="left"
       />
-      <Suspense fallback={<div className="text-muted-foreground">Loading...</div>}>
-        <ProductsBrowser
-          products={products}
-          categories={[category]}
-          brands={brands}
-          page={result.page}
-          totalPages={result.totalPages}
-          initialFilters={initialFilters}
-        />
+      <Suspense fallback={<CatalogSkeleton title="Loading category products…" />}>
+        <CategoryProducts slug={slug} page={page} q={q} brandSlug={brandSlug} />
       </Suspense>
     </div>
   );

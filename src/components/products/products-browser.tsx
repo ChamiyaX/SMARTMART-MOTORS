@@ -83,7 +83,7 @@ export function ProductsBrowser({
   const onFiltersChange = (next: ProductFiltersState) => {
     setFilters(next);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => pushParams(next, 1), 350);
+    debounceRef.current = setTimeout(() => pushParams(next, 1), 200);
   };
 
   const onReset = () => {
