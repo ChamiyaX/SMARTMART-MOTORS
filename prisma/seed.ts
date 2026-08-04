@@ -20,7 +20,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Seeding SmartMart Motors database...");
 
-  const passwordHash = await hash("Admin@123456", 12);
+  const passwordHash = await hash("admin", 12);
 
   const admin = await prisma.user.upsert({
     where: { email: "admin@smartmartmotors.com" },
@@ -38,7 +38,7 @@ async function main() {
     },
   });
 
-  console.log(`✓ Admin user: ${admin.email}`);
+  console.log(`✓ Admin user: ${admin.email} (login: admin / admin)`);
 
   const categoryData = [
     {

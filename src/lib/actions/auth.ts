@@ -42,7 +42,7 @@ export async function loginAction(
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { success: false, error: "Invalid email or password" };
+          return { success: false, error: "Invalid username or password" };
         default:
           return { success: false, error: "Unable to sign in. Try again." };
       }

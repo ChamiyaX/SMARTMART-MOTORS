@@ -31,17 +31,18 @@ export function LoginForm({ callbackUrl = "/admin" }: LoginFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="email" className="text-white/70">
-          Email
+          Username
         </Label>
         <div className="relative">
           <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30" />
           <Input
             id="email"
             name="email"
-            type="email"
-            autoComplete="email"
+            type="text"
+            autoComplete="username"
             required
-            placeholder="admin@smartmartmotors.com"
+            placeholder="admin"
+            defaultValue="admin"
             className="h-11 border-white/10 bg-white/[0.04] pl-10 text-white"
           />
         </div>
@@ -67,7 +68,7 @@ export function LoginForm({ callbackUrl = "/admin" }: LoginFormProps) {
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             required
-            placeholder="••••••••"
+            placeholder="admin"
             className="h-11 border-white/10 bg-white/[0.04] pl-10 pr-10 text-white"
           />
           <button

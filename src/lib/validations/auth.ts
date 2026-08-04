@@ -1,12 +1,22 @@
 import { z } from "zod";
 
+/** Demo login: "admin" maps to the seeded SUPER_ADMIN email. */
+export const ADMIN_LOGIN_ALIASES: Record<string, string> = {
+  admin: "admin@smartmartmotors.com",
+};
+
+export function resolveAdminLogin(identifier: string): string {
+  const normalized = identifier.trim().toLowerCase();
+  return ADMIN_LOGIN_ALIASES[normalized] ?? normalized;
+}
+
 export const loginSchema = z.object({
   email: z
     .string()
     .trim()
-    .email("Enter a valid email address")
-    .transform((value) => value.toLowerCase()),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+    .min(1, "Enter username or email")
+    .transform((value) => resolveAdminLogin(value)),
+  password: z.string().min(1, "Password is required"),
   remember: z.boolean().optional().default(false),
 });
 

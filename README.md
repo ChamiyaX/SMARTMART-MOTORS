@@ -68,10 +68,10 @@ npm run dev
 
 **Seed admin**
 
-| Field    | Value                       |
-| -------- | --------------------------- |
-| Email    | `admin@smartmartmotors.com` |
-| Password | `Admin@123456`              |
+| Field    | Value   |
+| -------- | ------- |
+| Username | `admin` |
+| Password | `admin` |
 
 Change this password immediately in production.
 
