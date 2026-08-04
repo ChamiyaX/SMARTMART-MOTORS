@@ -152,29 +152,38 @@ export function Footer() {
       </div>
 
       <Separator />
-      <div className="container flex flex-col items-center justify-between gap-3 py-6 text-center text-xs text-muted-foreground sm:flex-row sm:text-left">
+      <div className="container py-6 pb-16 text-center text-xs text-muted-foreground sm:text-left">
         <p>© {new Date().getFullYear()} SmartMart Motors. All rights reserved.</p>
-        <p className="flex flex-wrap items-center justify-center gap-1.5 sm:justify-end">
-          <span>Developed by</span>
-          <a
-            href={SITE_CONFIG.developer.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-white/80 transition hover:text-primary"
-          >
-            {SITE_CONFIG.developer.name}
-            <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
-          </a>
-          <span className="text-white/25">·</span>
-          <a
-            href={SITE_CONFIG.developer.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-brand-teal transition hover:text-primary"
-          >
-            {SITE_CONFIG.developer.brand}
-          </a>
-        </p>
+      </div>
+
+      {/* Fixed developer credit — always visible at bottom */}
+      <div className="bg-[#050505]/92 fixed inset-x-0 bottom-0 z-50 border-t border-white/10 backdrop-blur-xl">
+        <div className="container flex h-10 items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground sm:justify-between sm:text-left sm:text-xs">
+          <p className="hidden text-white/35 sm:block">
+            Premium parts. Precision service.
+          </p>
+          <p className="flex flex-wrap items-center justify-center gap-1.5">
+            <span>Developed by</span>
+            <a
+              href={SITE_CONFIG.developer.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-medium text-white/85 transition hover:text-primary"
+            >
+              {SITE_CONFIG.developer.name}
+              <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
+            </a>
+            <span className="text-white/25">·</span>
+            <a
+              href={SITE_CONFIG.developer.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-teal transition hover:text-primary"
+            >
+              {SITE_CONFIG.developer.brand}
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
