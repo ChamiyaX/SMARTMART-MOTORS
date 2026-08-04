@@ -42,6 +42,11 @@ export const SITE_CONFIG = {
       process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/smartmartmotors",
     youtube: process.env.NEXT_PUBLIC_YOUTUBE_URL || "",
   },
+  developer: {
+    name: "Chamidu Rathnayake",
+    brand: "NeoBitz",
+    url: "https://neobitz.site/",
+  },
 } as const;
 
 export const ADMIN_ROLES = ["SUPER_ADMIN", "ADMIN", "EDITOR"] as const;

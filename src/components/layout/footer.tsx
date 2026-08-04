@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { BrandLogo } from "@/components/shared/brand-logo";
+import { SITE_CONFIG } from "@/lib/constants";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -151,9 +152,29 @@ export function Footer() {
       </div>
 
       <Separator />
-      <div className="container flex flex-col items-center justify-between gap-2 py-6 text-center text-xs text-muted-foreground sm:flex-row sm:text-left">
+      <div className="container flex flex-col items-center justify-between gap-3 py-6 text-center text-xs text-muted-foreground sm:flex-row sm:text-left">
         <p>© {new Date().getFullYear()} SmartMart Motors. All rights reserved.</p>
-        <p>Premium parts. Precision service.</p>
+        <p className="flex flex-wrap items-center justify-center gap-1.5 sm:justify-end">
+          <span>Developed by</span>
+          <a
+            href={SITE_CONFIG.developer.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-medium text-white/80 transition hover:text-primary"
+          >
+            {SITE_CONFIG.developer.name}
+            <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
+          </a>
+          <span className="text-white/25">·</span>
+          <a
+            href={SITE_CONFIG.developer.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-teal transition hover:text-primary"
+          >
+            {SITE_CONFIG.developer.brand}
+          </a>
+        </p>
       </div>
     </footer>
   );
