@@ -1,0 +1,143 @@
+import { Mail, MapPin, Phone, Clock } from "lucide-react";
+
+import { ContactForm } from "@/components/contact/contact-form";
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { getCompanySettings, getSetting } from "@/lib/data/settings";
+import { SITE_CONFIG } from "@/lib/constants";
+import { generateSeoMetadata } from "@/lib/seo";
+import { safeQuery } from "@/lib/safe";
+
+export const metadata = generateSeoMetadata({
+  title: "Contact",
+  path: "/contact",
+  description: `Get in touch with ${SITE_CONFIG.name} for parts inquiries, wholesale, and support.`,
+});
+
+type BusinessHours = Record<string, string>;
+
+const dayLabels: Record<string, string> = {
+  monday: "Monday",
+  tuesday: "Tuesday",
+  wednesday: "Wednesday",
+  thursday: "Thursday",
+  friday: "Friday",
+  saturday: "Saturday",
+  sunday: "Sunday",
+};
+
+export default async function ContactPage() {
+  const [company, hours] = await Promise.all([
+    safeQuery(() => getCompanySettings(), {
+      name: SITE_CONFIG.name,
+      tagline: SITE_CONFIG.tagline,
+      address: SITE_CONFIG.address,
+      phone: SITE_CONFIG.phone,
+      email: SITE_CONFIG.email,
+      whatsapp: SITE_CONFIG.whatsapp,
+    }),
+    safeQuery(() => getSetting<BusinessHours>("business_hours"), {
+      monday: "08:30 – 18:00",
+      tuesday: "08:30 – 18:00",
+      wednesday: "08:30 – 18:00",
+      thursday: "08:30 – 18:00",
+      friday: "08:30 – 18:00",
+      saturday: "08:30 – 16:00",
+      sunday: "Closed",
+      note: "Island-wide delivery available",
+    } as BusinessHours),
+  ]);
+
+  const mapQuery = encodeURIComponent(company.address || SITE_CONFIG.address);
+  const hourEntries = Object.entries(hours || {}).filter(
+    ([key]) => key !== "note" && dayLabels[key]
+  );
+
+  return (
+    <div className="container pb-20 pt-28">
+      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
+      <SectionHeading
+        eyebrow="Reach us"
+        title="Contact"
+        description="Questions about fitment, stock, or wholesale? Send a message or visit us."
+        align="left"
+      />
+
+      <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
+        <div className="space-y-6">
+          <div className="space-y-5 rounded-xl p-6 glass">
+            <div className="flex gap-3">
+              <Phone className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Phone
+                </p>
+                <a
+                  href={`tel:${company.phone}`}
+                  className="text-white transition hover:text-primary"
+                >
+                  {company.phone}
+                </a>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Mail className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Email
+                </p>
+                <a
+                  href={`mailto:${company.email}`}
+                  className="text-white transition hover:text-primary"
+                >
+                  {company.email}
+                </a>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <MapPin className="mt-0.5 h-5 w-5 text-primary" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Address
+                </p>
+                <p className="text-white">{company.address}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl p-6 glass">
+            <div className="mb-4 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-primary" />
+              <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-white">
+                Business hours
+              </h2>
+            </div>
+            <ul className="space-y-2 text-sm">
+              {hourEntries.map(([day, time]) => (
+                <li key={day} className="flex justify-between gap-4">
+                  <span className="text-muted-foreground">{dayLabels[day]}</span>
+                  <span className="text-white">{time}</span>
+                </li>
+              ))}
+            </ul>
+            {hours?.note ? (
+              <p className="mt-4 text-xs text-muted-foreground">{hours.note}</p>
+            ) : null}
+          </div>
+
+          <div className="overflow-hidden rounded-xl border border-white/10">
+            <iframe
+              title="SmartMart Motors location"
+              src={`https://maps.google.com/maps?q=${mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+              className="h-64 w-full contrast-125 grayscale invert-[0.9]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+
+        <ContactForm />
+      </div>
+    </div>
+  );
+}

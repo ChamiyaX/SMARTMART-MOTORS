@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: smartmart
+    ports:
+      - "5432:5432"
+    volumes:
+      - smartmart_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d smartmart"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      args:
+        DATABASE_URL: postgresql://postgres:postgres@db:5432/smartmart?schema=public
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/smartmart?schema=public
+      AUTH_SECRET: change-me-in-production
+      AUTH_URL: http://localhost:3000
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_PHONE: "0775475141"
+      NEXT_PUBLIC_SITE_EMAIL: smartmartmotors@gmail.com
+      NEXT_PUBLIC_SITE_WHATSAPP: "94775475141"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  smartmart_pg:

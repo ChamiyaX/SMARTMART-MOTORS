@@ -1,0 +1,75 @@
+import Image from "next/image";
+import Link from "next/link";
+
+import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { FadeIn } from "@/components/shared/fade-in";
+import { SectionHeading } from "@/components/shared/section-heading";
+import { EmptyState } from "@/components/shared/empty-state";
+import { getCategories } from "@/lib/data/categories";
+import { generateSeoMetadata } from "@/lib/seo";
+import { safeQuery } from "@/lib/safe";
+import { serializeCategory } from "@/lib/serialize";
+
+export const metadata = generateSeoMetadata({
+  title: "Categories",
+  path: "/categories",
+  description: "Browse automotive spare parts by category.",
+});
+
+export default async function CategoriesPage() {
+  const categoriesRaw = await safeQuery(() => getCategories(), []);
+  const categories = categoriesRaw.map(serializeCategory);
+
+  return (
+    <div className="container pb-20 pt-28">
+      <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Categories" }]} />
+      <SectionHeading
+        eyebrow="Browse"
+        title="Categories"
+        description="Find parts organized the way workshops and enthusiasts shop."
+        align="left"
+      />
+
+      {!categories.length ? (
+        <EmptyState
+          title="No categories yet"
+          description="Categories will appear once the catalog is connected."
+        />
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((category, index) => (
+            <FadeIn key={category.id} delay={index * 0.05}>
+              <Link
+                href={`/categories/${category.slug}`}
+                className="group relative block aspect-[16/10] overflow-hidden rounded-xl border border-white/10"
+              >
+                {category.image ? (
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 100vw, 33vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <h2 className="font-display text-xl font-semibold text-white transition-colors group-hover:text-primary">
+                    {category.name}
+                  </h2>
+                  {category.description ? (
+                    <p className="mt-1 line-clamp-2 text-sm text-white/60">
+                      {category.description}
+                    </p>
+                  ) : null}
+                </div>
+              </Link>
+            </FadeIn>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

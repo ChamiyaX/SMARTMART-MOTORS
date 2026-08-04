@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  quality:
+    name: Lint, typecheck & build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      # Build-time placeholders — real secrets are set in Vercel / deployment
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smartmart?schema=public
+      AUTH_SECRET: ci-build-placeholder-secret-not-for-production
+      AUTH_URL: http://localhost:3000
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_NAME: SmartMart Motors
+      NEXT_PUBLIC_SITE_PHONE: "0775475141"
+      NEXT_PUBLIC_SITE_EMAIL: smartmartmotors@gmail.com
+      NEXT_PUBLIC_SITE_WHATSAPP: "94775475141"
+      NEXT_PUBLIC_ENABLE_ANALYTICS: "false"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
