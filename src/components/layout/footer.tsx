@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { ExternalLink, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { BrandLogo } from "@/components/shared/brand-logo";
-import { SITE_CONFIG } from "@/lib/constants";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -49,7 +48,7 @@ const categories = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/10 bg-secondary/80 backdrop-blur-xl">
+    <footer className="mt-24 border-t border-white/10 bg-secondary/80 pb-14 backdrop-blur-xl">
       <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <BrandLogo height={48} className="max-w-[220px]" />
@@ -152,38 +151,8 @@ export function Footer() {
       </div>
 
       <Separator />
-      <div className="container py-6 pb-16 text-center text-xs text-muted-foreground sm:text-left">
+      <div className="container py-6 text-center text-xs text-muted-foreground sm:text-left">
         <p>© {new Date().getFullYear()} SmartMart Motors. All rights reserved.</p>
-      </div>
-
-      {/* Fixed developer credit — always visible at bottom */}
-      <div className="bg-[#050505]/92 fixed inset-x-0 bottom-0 z-50 border-t border-white/10 backdrop-blur-xl">
-        <div className="container flex h-10 items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground sm:justify-between sm:text-left sm:text-xs">
-          <p className="hidden text-white/35 sm:block">
-            Premium parts. Precision service.
-          </p>
-          <p className="flex flex-wrap items-center justify-center gap-1.5">
-            <span>Developed by</span>
-            <a
-              href={SITE_CONFIG.developer.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-medium text-white/85 transition hover:text-primary"
-            >
-              {SITE_CONFIG.developer.name}
-              <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
-            </a>
-            <span className="text-white/25">·</span>
-            <a
-              href={SITE_CONFIG.developer.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-brand-teal transition hover:text-primary"
-            >
-              {SITE_CONFIG.developer.brand}
-            </a>
-          </p>
-        </div>
       </div>
     </footer>
   );
