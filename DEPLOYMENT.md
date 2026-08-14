@@ -57,6 +57,17 @@ CLOUDINARY_UPLOAD_FOLDER=smartmart-motors
 5. Assign domain → SSL is automatic.
 6. Enable Preview Deployments for PRs (default).
 
+### Function region (important for speed)
+
+Serverless functions must sit in the same region as the Supabase database, otherwise every
+query pays a cross-continent round trip and pages take seconds to render.
+
+`vercel.json` pins functions to `bom1` (Mumbai) to match a Supabase project in `ap-south-1`.
+If your Supabase project lives elsewhere, change `regions` to the matching Vercel region
+(`fra1` for `eu-central-1`, `iad1` for `us-east-1`, `sin1` for `ap-southeast-1`, …) and redeploy.
+
+Confirm the Supabase region in Dashboard → Project Settings → General → Region.
+
 ### Rollback
 
 Vercel Dashboard → Deployments → open a previous successful deployment → Promote to Production.

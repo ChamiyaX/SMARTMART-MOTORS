@@ -21,16 +21,21 @@ import { formatPrice } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+const PAGE_SIZE = 25;
+
 type ProductsPageProps = {
   searchParams: Promise<{
     q?: string;
     featured?: string;
     status?: string;
+    page?: string;
   }>;
 };
 
 export default async function ProductsAdminPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
+  const page = Math.max(1, Number(params.page) || 1);
+
   let products: Array<{
     id: string;
     name: string;
@@ -43,39 +48,66 @@ export default async function ProductsAdminPage({ searchParams }: ProductsPagePr
     category: { name: string };
     brand: { name: string };
   }> = [];
+  let total = 0;
   let dbError: string | null = null;
 
+  const where = {
+    AND: [
+      params.q
+        ? {
+            OR: [
+              { name: { contains: params.q, mode: "insensitive" as const } },
+              { sku: { contains: params.q, mode: "insensitive" as const } },
+            ],
+          }
+        : {},
+      params.featured === "1" ? { isFeatured: true } : {},
+      params.status
+        ? {
+            stockStatus: params.status as
+              "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER",
+          }
+        : {},
+    ],
+  };
+
   try {
-    products = await prisma.product.findMany({
-      where: {
-        AND: [
-          params.q
-            ? {
-                OR: [
-                  { name: { contains: params.q, mode: "insensitive" } },
-                  { sku: { contains: params.q, mode: "insensitive" } },
-                ],
-              }
-            : {},
-          params.featured === "1" ? { isFeatured: true } : {},
-          params.status
-            ? {
-                stockStatus: params.status as
-                  "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER",
-              }
-            : {},
-        ],
-      },
-      include: {
-        category: { select: { name: true } },
-        brand: { select: { name: true } },
-      },
-      orderBy: { updatedAt: "desc" },
-      take: 100,
-    });
+    // Selecting explicit columns keeps description/specifications JSON off the wire.
+    [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          sku: true,
+          price: true,
+          stockStatus: true,
+          isFeatured: true,
+          isNewArrival: true,
+          isActive: true,
+          category: { select: { name: true } },
+          brand: { select: { name: true } },
+        },
+        orderBy: { updatedAt: "desc" },
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+      prisma.product.count({ where }),
+    ]);
   } catch {
     dbError = DB_CONNECT_MESSAGE;
   }
+
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const pageHref = (target: number) => {
+    const search = new URLSearchParams();
+    if (params.q) search.set("q", params.q);
+    if (params.featured) search.set("featured", params.featured);
+    if (params.status) search.set("status", params.status);
+    if (target > 1) search.set("page", String(target));
+    const qs = search.toString();
+    return qs ? `/admin/products?${qs}` : "/admin/products";
+  };
 
   return (
     <div>
@@ -100,7 +132,7 @@ export default async function ProductsAdminPage({ searchParams }: ProductsPagePr
 
       <DataTable
         title="Catalog"
-        description={`${products.length} products`}
+        description={`${total} products · page ${page} of ${totalPages}`}
         empty={products.length === 0}
         emptyMessage={dbError || "No products found. Create your first product."}
         searchSlot={
@@ -196,6 +228,35 @@ export default async function ProductsAdminPage({ searchParams }: ProductsPagePr
           </TableBody>
         </Table>
       </DataTable>
+
+      {totalPages > 1 && (
+        <nav
+          className="mt-6 flex items-center justify-between gap-3"
+          aria-label="Pagination"
+        >
+          {page > 1 ? (
+            <Button asChild variant="outline" size="sm" className="border-white/10">
+              <Link href={pageHref(page - 1)}>Previous</Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" className="border-white/10" disabled>
+              Previous
+            </Button>
+          )}
+          <span className="text-xs text-white/40">
+            Page {page} of {totalPages}
+          </span>
+          {page < totalPages ? (
+            <Button asChild variant="outline" size="sm" className="border-white/10">
+              <Link href={pageHref(page + 1)}>Next</Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" className="border-white/10" disabled>
+              Next
+            </Button>
+          )}
+        </nav>
+      )}
     </div>
   );
 }

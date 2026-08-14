@@ -11,20 +11,25 @@ import { formatPrice } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+type CountsRow = {
+  products: bigint;
+  categories: bigint;
+  brands: bigint;
+  new_messages: bigint;
+};
+
 async function getDashboardData() {
   try {
-    const [
-      productCount,
-      categoryCount,
-      brandCount,
-      newMessages,
-      recentMessages,
-      recentProducts,
-    ] = await Promise.all([
-      prisma.product.count(),
-      prisma.category.count(),
-      prisma.brand.count(),
-      prisma.message.count({ where: { status: "NEW" } }),
+    // One round trip for all four totals — the pooled connection serializes
+    // separate count() calls, which is costly on a remote database.
+    const [counts, recentMessages, recentProducts] = await Promise.all([
+      prisma.$queryRaw<CountsRow[]>`
+        SELECT
+          (SELECT COUNT(*) FROM "products") AS products,
+          (SELECT COUNT(*) FROM "categories") AS categories,
+          (SELECT COUNT(*) FROM "brands") AS brands,
+          (SELECT COUNT(*) FROM "messages" WHERE "status" = 'NEW') AS new_messages
+      `,
       prisma.message.findMany({
         take: 6,
         orderBy: { createdAt: "desc" },
@@ -40,21 +45,23 @@ async function getDashboardData() {
       prisma.product.findMany({
         take: 6,
         orderBy: { createdAt: "desc" },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          sku: true,
+          price: true,
           brand: { select: { name: true } },
-          images: {
-            where: { isPrimary: true },
-            take: 1,
-          },
         },
       }),
     ]);
 
+    const row = counts[0];
+
     return {
-      productCount,
-      categoryCount,
-      brandCount,
-      newMessages,
+      productCount: Number(row?.products ?? 0),
+      categoryCount: Number(row?.categories ?? 0),
+      brandCount: Number(row?.brands ?? 0),
+      newMessages: Number(row?.new_messages ?? 0),
       recentMessages,
       recentProducts,
       dbError: null as string | null,
