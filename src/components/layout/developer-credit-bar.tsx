@@ -26,19 +26,10 @@ export function DeveloperCreditBar() {
               href={SITE_CONFIG.developer.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-semibold text-white transition hover:text-primary"
-            >
-              {SITE_CONFIG.developer.name}
-              <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
-            </a>
-            <span className="text-white/20">·</span>
-            <a
-              href={SITE_CONFIG.developer.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-brand-teal transition hover:text-primary"
+              className="inline-flex items-center gap-1 font-semibold text-brand-teal transition hover:text-primary"
             >
               {SITE_CONFIG.developer.brand}
+              <ExternalLink className="h-3 w-3 opacity-70" aria-hidden />
             </a>
           </p>
         </div>

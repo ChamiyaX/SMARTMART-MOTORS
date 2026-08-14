@@ -43,9 +43,9 @@ export const SITE_CONFIG = {
     youtube: process.env.NEXT_PUBLIC_YOUTUBE_URL || "",
   },
   developer: {
-    name: "Chamidu Rathnayake",
-    brand: "NeoBitz",
-    url: "https://neobitz.site/",
+    name: "HelaCode",
+    brand: "HelaCode",
+    url: "https://helacode.lk/",
   },
 } as const;
 
