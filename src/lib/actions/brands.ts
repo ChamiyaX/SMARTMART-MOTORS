@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { requireAdminSession } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { revalidateCatalogue } from "@/lib/revalidate";
 import { slugify } from "@/lib/utils";
 import { createBrandSchema, updateBrandSchema } from "@/lib/validations/brand";
 
@@ -40,6 +41,7 @@ export async function createBrand(input: unknown): Promise<ActionResult> {
       },
     });
     revalidatePath("/admin/brands");
+    revalidateCatalogue();
     return { success: true, id: brand.id };
   } catch (error) {
     return {
@@ -78,6 +80,7 @@ export async function updateBrand(input: unknown): Promise<ActionResult> {
       },
     });
     revalidatePath("/admin/brands");
+    revalidateCatalogue();
     return { success: true, id };
   } catch (error) {
     return {
@@ -93,6 +96,7 @@ export async function deleteBrand(id: string): Promise<ActionResult> {
   try {
     await prisma.brand.delete({ where: { id } });
     revalidatePath("/admin/brands");
+    revalidateCatalogue();
     return { success: true };
   } catch (error) {
     return {

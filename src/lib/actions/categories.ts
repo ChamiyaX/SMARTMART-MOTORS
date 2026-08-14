@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { requireAdminSession } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { revalidateCatalogue } from "@/lib/revalidate";
 import { slugify } from "@/lib/utils";
 import { createCategorySchema, updateCategorySchema } from "@/lib/validations/category";
 
@@ -42,6 +43,7 @@ export async function createCategory(input: unknown): Promise<ActionResult> {
       },
     });
     revalidatePath("/admin/categories");
+    revalidateCatalogue();
     return { success: true, id: category.id };
   } catch (error) {
     return {
@@ -84,6 +86,7 @@ export async function updateCategory(input: unknown): Promise<ActionResult> {
       },
     });
     revalidatePath("/admin/categories");
+    revalidateCatalogue();
     return { success: true, id };
   } catch (error) {
     return {
@@ -99,6 +102,7 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
   try {
     await prisma.category.delete({ where: { id } });
     revalidatePath("/admin/categories");
+    revalidateCatalogue();
     return { success: true };
   } catch (error) {
     return {

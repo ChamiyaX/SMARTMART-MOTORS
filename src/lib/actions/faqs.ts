@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { requireAdminSession } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { revalidateFaqs } from "@/lib/revalidate";
 import { createFaqSchema, updateFaqSchema } from "@/lib/validations/faq";
 
 export type ActionResult = {
@@ -26,6 +27,7 @@ export async function createFaq(input: unknown): Promise<ActionResult> {
   try {
     const faq = await prisma.faq.create({ data: parsed.data });
     revalidatePath("/admin/faqs");
+    revalidateFaqs();
     return { success: true, id: faq.id };
   } catch (error) {
     return {
@@ -51,6 +53,7 @@ export async function updateFaq(input: unknown): Promise<ActionResult> {
   try {
     await prisma.faq.update({ where: { id }, data });
     revalidatePath("/admin/faqs");
+    revalidateFaqs();
     return { success: true, id };
   } catch (error) {
     return {
@@ -66,6 +69,7 @@ export async function deleteFaq(id: string): Promise<ActionResult> {
   try {
     await prisma.faq.delete({ where: { id } });
     revalidatePath("/admin/faqs");
+    revalidateFaqs();
     return { success: true };
   } catch (error) {
     return {

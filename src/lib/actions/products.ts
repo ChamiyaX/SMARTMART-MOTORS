@@ -5,6 +5,7 @@ import type { Prisma } from "@prisma/client";
 
 import { requireAdminSession } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { revalidateCatalogue } from "@/lib/revalidate";
 import { slugify } from "@/lib/utils";
 import { createProductSchema, updateProductSchema } from "@/lib/validations/product";
 
@@ -92,6 +93,7 @@ export async function createProduct(input: unknown): Promise<ActionResult> {
     await writeAudit(session.user.id, "CREATE", product.id, { name: product.name });
     revalidatePath("/admin/products");
     revalidatePath("/admin");
+    revalidateCatalogue();
     return { success: true, id: product.id };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to create product";
@@ -172,6 +174,7 @@ export async function updateProduct(input: unknown): Promise<ActionResult> {
     revalidatePath("/admin/products");
     revalidatePath(`/admin/products/${id}/edit`);
     revalidatePath("/admin");
+    revalidateCatalogue();
     return { success: true, id: product.id };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to update product";
@@ -187,6 +190,7 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
     await writeAudit(session.user.id, "DELETE", id);
     revalidatePath("/admin/products");
     revalidatePath("/admin");
+    revalidateCatalogue();
     return { success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to delete product";

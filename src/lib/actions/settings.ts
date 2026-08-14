@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { requireAdminSession } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
+import { revalidateSiteContent } from "@/lib/revalidate";
 import {
   companySettingsSchema,
   socialSettingsSchema,
@@ -72,6 +73,7 @@ export async function upsertSetting(input: unknown): Promise<ActionResult> {
     );
     revalidatePath("/admin/settings");
     revalidatePath("/admin/seo");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
@@ -95,6 +97,7 @@ export async function saveCompanySettings(input: unknown): Promise<ActionResult>
   try {
     await upsertKey("company", parsed.data, "company");
     revalidatePath("/admin/settings");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
@@ -118,6 +121,7 @@ export async function saveSocialSettings(input: unknown): Promise<ActionResult> 
   try {
     await upsertKey("social", parsed.data, "social");
     revalidatePath("/admin/settings");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
@@ -138,6 +142,7 @@ export async function saveHoursSettings(input: unknown): Promise<ActionResult> {
   try {
     await upsertKey("hours", parsed.data, "company");
     revalidatePath("/admin/settings");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
@@ -158,6 +163,7 @@ export async function saveAnalyticsIds(input: unknown): Promise<ActionResult> {
   try {
     await upsertKey("analytics", parsed.data, "analytics");
     revalidatePath("/admin/settings");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
@@ -181,6 +187,7 @@ export async function saveSeoSettings(input: unknown): Promise<ActionResult> {
   try {
     await upsertKey("seo", parsed.data, "seo");
     revalidatePath("/admin/seo");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
@@ -234,6 +241,7 @@ export async function savePageContent(input: unknown): Promise<ActionResult> {
       },
     });
     revalidatePath("/admin/content");
+    revalidateSiteContent();
     return { success: true };
   } catch (error) {
     return {
