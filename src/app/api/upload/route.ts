@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { auth } from "@/lib/auth";
-import { uploadImage } from "@/lib/cloudinary";
+import { uploadMedia } from "@/lib/upload";
 import { MAX_UPLOAD_SIZE_MB } from "@/lib/constants";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -46,10 +46,17 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const folder = String(formData.get("folder") || "smartmart-motors");
-    const result = await uploadImage(buffer, { folder });
+    const result = await uploadMedia(buffer, {
+      folder,
+      filename: file.name,
+      contentType: file.type,
+    });
+
+    const uploadedUrl =
+      "secureUrl" in result && result.secureUrl ? result.secureUrl : result.url;
 
     return NextResponse.json({
-      url: result.secureUrl,
+      url: uploadedUrl,
       publicId: result.publicId,
       width: result.width,
       height: result.height,

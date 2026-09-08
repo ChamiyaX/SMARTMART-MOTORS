@@ -40,8 +40,8 @@ const formSchema = z.object({
   isNewArrival: z.boolean(),
   isPopular: z.boolean(),
   isActive: z.boolean(),
-  categoryId: z.string().min(1),
-  brandId: z.string().min(1),
+  categoryId: z.string().min(1, "Select a category"),
+  brandId: z.string().min(1, "Select a brand"),
   metaTitle: z.string().optional().nullable(),
   metaDescription: z.string().optional().nullable(),
   compatibleModels: z.array(z.string()).optional(),
@@ -110,6 +110,16 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     }
   }, [nameValue, isEdit, form]);
 
+  useEffect(() => {
+    if (isEdit) return;
+    if (!form.getValues("categoryId") && categories[0]) {
+      form.setValue("categoryId", categories[0].id);
+    }
+    if (!form.getValues("brandId") && brands[0]) {
+      form.setValue("brandId", brands[0].id);
+    }
+  }, [isEdit, categories, brands, form]);
+
   async function handleUpload(file: File) {
     setUploading(true);
     try {
@@ -119,14 +129,28 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       const res = await fetch("/api/upload", { method: "POST", body });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
-      const next = [...imageUrls, data.url as string];
-      form.setValue("imageUrls", next);
+      const current = form.getValues("imageUrls") || [];
+      form.setValue("imageUrls", [...current, data.url as string], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
       toast.success("Image uploaded");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
     } finally {
       setUploading(false);
     }
+  }
+
+  function onInvalid(errors: typeof form.formState.errors) {
+    const messages = Object.values(errors)
+      .map((error) => error?.message)
+      .filter(Boolean);
+
+    toast.error(
+      messages[0]?.toString() ||
+        "Fill in all required fields (name, SKU, category, brand, description, price)."
+    );
   }
 
   function onSubmit(values: FormValues) {
@@ -152,11 +176,27 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     }));
 
     const payload = {
-      ...values,
+      name: values.name,
+      slug: values.slug || slugify(values.name),
+      sku: values.sku,
+      description: values.description,
+      richDescription: values.richDescription ?? null,
+      price: values.price,
+      compareAtPrice: values.compareAtPrice ?? null,
+      discount: values.discount ?? null,
+      stockStatus: values.stockStatus,
+      stockQuantity: values.stockQuantity,
+      isFeatured: values.isFeatured,
+      isNewArrival: values.isNewArrival,
+      isPopular: values.isPopular,
+      isActive: values.isActive,
+      categoryId: values.categoryId,
+      brandId: values.brandId,
+      metaTitle: values.metaTitle ?? null,
+      metaDescription: values.metaDescription ?? null,
       tags,
       specifications,
       images,
-      slug: values.slug || slugify(values.name),
     };
 
     startTransition(async () => {
@@ -178,7 +218,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const inputClass = "border-white/10 bg-white/[0.04] text-white";
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8">
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl sm:p-6">
         <h2 className="mb-4 text-sm font-medium uppercase tracking-[0.14em] text-white">
           Basic details
@@ -194,6 +234,9 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
           <div className="space-y-2">
             <Label>SKU</Label>
             <Input className={inputClass} {...form.register("sku")} />
+            {form.formState.errors.sku && (
+              <p className="text-xs text-primary">{form.formState.errors.sku.message}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Slug</Label>
@@ -207,6 +250,11 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               className={inputClass}
               {...form.register("price")}
             />
+            {form.formState.errors.price && (
+              <p className="text-xs text-primary">
+                {form.formState.errors.price.message}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Stock quantity</Label>
@@ -220,7 +268,9 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             <Label>Category</Label>
             <Select
               value={form.watch("categoryId")}
-              onValueChange={(v) => form.setValue("categoryId", v)}
+              onValueChange={(v) =>
+                form.setValue("categoryId", v, { shouldValidate: true })
+              }
             >
               <SelectTrigger className={inputClass}>
                 <SelectValue placeholder="Select category" />
@@ -233,12 +283,22 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 ))}
               </SelectContent>
             </Select>
+            {categories.length === 0 && (
+              <p className="text-xs text-primary">
+                No categories found. Add categories in Admin → Categories first.
+              </p>
+            )}
+            {form.formState.errors.categoryId && (
+              <p className="text-xs text-primary">
+                {form.formState.errors.categoryId.message}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Brand</Label>
             <Select
               value={form.watch("brandId")}
-              onValueChange={(v) => form.setValue("brandId", v)}
+              onValueChange={(v) => form.setValue("brandId", v, { shouldValidate: true })}
             >
               <SelectTrigger className={inputClass}>
                 <SelectValue placeholder="Select brand" />
@@ -251,6 +311,16 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 ))}
               </SelectContent>
             </Select>
+            {brands.length === 0 && (
+              <p className="text-xs text-primary">
+                No brands found. Add brands in Admin → Brands first.
+              </p>
+            )}
+            {form.formState.errors.brandId && (
+              <p className="text-xs text-primary">
+                {form.formState.errors.brandId.message}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Stock status</Label>
@@ -274,6 +344,11 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
           <div className="space-y-2 md:col-span-2">
             <Label>Description</Label>
             <Textarea rows={4} className={inputClass} {...form.register("description")} />
+            {form.formState.errors.description && (
+              <p className="text-xs text-primary">
+                {form.formState.errors.description.message}
+              </p>
+            )}
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label>Tags (comma separated)</Label>

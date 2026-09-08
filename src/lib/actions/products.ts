@@ -97,6 +97,14 @@ export async function createProduct(input: unknown): Promise<ActionResult> {
     return { success: true, id: product.id };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to create product";
+    if (/Unique constraint/i.test(message)) {
+      if (/sku/i.test(message)) {
+        return { success: false, error: "A product with this SKU already exists." };
+      }
+      if (/slug/i.test(message)) {
+        return { success: false, error: "A product with this slug already exists." };
+      }
+    }
     return { success: false, error: message };
   }
 }

@@ -35,10 +35,14 @@ openssl rand -base64 32
 
 Set as `AUTH_SECRET` (and keep `AUTH_URL` / `NEXTAUTH_URL` = your production URL).
 
-## 3. Cloudinary
+## 3. Image uploads (Cloudinary or Supabase Storage)
+
+Admin image uploads need **either** Cloudinary **or** Supabase Storage.
+
+### Option A — Cloudinary (recommended for CDN transforms)
 
 1. Dashboard → copy Cloud name, API Key, API Secret.
-2. Set:
+2. Set on Vercel:
 
 ```
 CLOUDINARY_CLOUD_NAME=
@@ -47,6 +51,20 @@ CLOUDINARY_API_SECRET=
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_UPLOAD_FOLDER=smartmart-motors
 ```
+
+### Option B — Supabase Storage (no Cloudinary account needed)
+
+If Cloudinary keys are omitted, uploads automatically use Supabase Storage instead.
+Ensure these are set on Vercel (from Supabase → Project Settings → API):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_STORAGE_BUCKET=smartmart-media
+```
+
+Then run `supabase/migrations/002_storage_bucket.sql` in Supabase → SQL Editor to create the public media bucket.
 
 ## 4. Vercel
 
