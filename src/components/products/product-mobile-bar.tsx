@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Mail, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
@@ -10,24 +9,24 @@ type ProductMobileBarProps = {
   price: number | string;
   compareAtPrice?: number | string | null;
   whatsappHref: string;
+  productName: string;
 };
 
 export function ProductMobileBar({
   price,
   compareAtPrice,
   whatsappHref,
+  productName,
 }: ProductMobileBarProps) {
   const onSale = compareAtPrice != null && Number(compareAtPrice) > Number(price);
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#050505]/95 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl lg:hidden">
-      <div className="container flex items-center gap-3 px-4">
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            Price
-          </p>
+      <div className="container grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4">
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-medium text-white/70">{productName}</p>
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-xl font-bold text-primary">
+            <span className="font-display text-lg font-bold text-primary sm:text-xl">
               {formatPrice(price)}
             </span>
             {onSale ? (
@@ -37,16 +36,16 @@ export function ProductMobileBar({
             ) : null}
           </div>
         </div>
-        <Button asChild variant="glow" size="lg" className="shrink-0 px-4">
+        <Button
+          asChild
+          variant="glow"
+          size="lg"
+          className="h-12 min-w-[9.5rem] shrink-0 px-5"
+        >
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
             <MessageCircle className="h-4 w-4" />
             WhatsApp
           </a>
-        </Button>
-        <Button asChild variant="outline" size="icon" className="shrink-0">
-          <Link href="/contact" aria-label="Contact us">
-            <Mail className="h-4 w-4" />
-          </Link>
         </Button>
       </div>
     </div>
