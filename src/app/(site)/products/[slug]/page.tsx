@@ -15,7 +15,7 @@ import {
   incrementProductView,
 } from "@/lib/data/products";
 import { getWhatsAppLink, SITE_CONFIG } from "@/lib/constants";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, resolveMediaUrl } from "@/lib/utils";
 import { breadcrumbJsonLd, generateSeoMetadata, productJsonLd } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
 import { serializeProduct, serializeProducts } from "@/lib/serialize";
@@ -36,7 +36,7 @@ export async function generateMetadata({
     title: product.metaTitle || product.name,
     description: product.metaDescription || product.description,
     path: `/products/${product.slug}`,
-    image: product.images?.[0]?.url,
+    image: product.images?.[0]?.url ? resolveMediaUrl(product.images[0].url) : undefined,
   });
 }
 
@@ -81,7 +81,9 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               sku: product.sku,
               slug: product.slug,
               price: product.price,
-              image: product.images?.[0]?.url,
+              image: product.images?.[0]?.url
+                ? resolveMediaUrl(product.images[0].url)
+                : undefined,
               brand: product.brand?.name,
               availability,
             })

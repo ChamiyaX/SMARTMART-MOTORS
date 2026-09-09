@@ -38,3 +38,10 @@ export function absoluteUrl(path = ""): string {
   if (!path) return base;
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
+
+/** Turn /api/files/... paths into absolute URLs for SEO and Open Graph. */
+export function resolveMediaUrl(url: string): string {
+  if (!url) return url;
+  if (url.startsWith("/")) return absoluteUrl(url);
+  return url;
+}

@@ -168,12 +168,15 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       .map((t) => t.trim())
       .filter(Boolean);
 
-    const images = (values.imageUrls || []).map((url, index) => ({
-      url,
-      sortOrder: index,
-      isPrimary: index === 0,
-      alt: values.name,
-    }));
+    const images = (values.imageUrls || [])
+      .map((url) => url.trim())
+      .filter(Boolean)
+      .map((url, index) => ({
+        url,
+        sortOrder: index,
+        isPrimary: index === 0,
+        alt: values.name,
+      }));
 
     const payload = {
       name: values.name,

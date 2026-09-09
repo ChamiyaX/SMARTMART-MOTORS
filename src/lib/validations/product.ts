@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { mediaUrlSchema } from "@/lib/validations/media";
+
 export const stockStatusEnum = z.enum([
   "IN_STOCK",
   "LOW_STOCK",
@@ -38,7 +40,7 @@ const productBaseSchema = z.object({
   images: z
     .array(
       z.object({
-        url: z.string().url(),
+        url: mediaUrlSchema,
         publicId: z.string().optional().nullable(),
         alt: z.string().optional().nullable(),
         sortOrder: z.number().int().min(0).default(0),
