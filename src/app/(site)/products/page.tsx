@@ -92,7 +92,7 @@ export default async function ProductsPage({
   };
 
   return (
-    <div className="container pb-20 pt-28">
+    <div className="container px-4 pb-24 pt-24 sm:px-6 sm:pb-20 sm:pt-28">
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Products" }]} />
       <SectionHeading
         eyebrow="Catalog"

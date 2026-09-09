@@ -5,6 +5,7 @@ import { MessageCircle } from "lucide-react";
 
 import { ProductDescription } from "@/components/products/product-description";
 import { ProductGallery } from "@/components/products/product-gallery";
+import { ProductMobileBar } from "@/components/products/product-mobile-bar";
 import { ProductGrid } from "@/components/products/product-grid";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { SectionHeading } from "@/components/shared/section-heading";
@@ -71,7 +72,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       : [];
 
   return (
-    <div className="container pb-20 pt-28">
+    <div className="container px-4 pb-32 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:pb-20">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -112,17 +113,17 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         ]}
       />
 
-      <div className="grid gap-10 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
         <ProductGallery images={product.images || []} alt={product.name} />
 
-        <div className="space-y-6">
-          <div className="space-y-3">
+        <div className="space-y-5 sm:space-y-6">
+          <div className="space-y-2 sm:space-y-3">
             {product.brand?.name ? (
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 {product.brand.name}
               </p>
             ) : null}
-            <h1 className="font-display text-3xl font-bold text-white sm:text-4xl">
+            <h1 className="font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
               {product.name}
             </h1>
             <div className="flex flex-wrap gap-2">
@@ -133,7 +134,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           </div>
 
           <div className="flex items-baseline gap-3">
-            <span className="font-display text-3xl font-bold text-primary">
+            <span className="font-display text-2xl font-bold text-primary sm:text-3xl">
               {formatPrice(product.price)}
             </span>
             {product.compareAtPrice != null &&
@@ -145,7 +146,10 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           </div>
 
           <p className="text-sm text-muted-foreground">SKU: {product.sku}</p>
-          <ProductDescription description={product.description} />
+          <ProductDescription
+            description={product.description}
+            className="text-sm sm:text-base"
+          />
 
           {product.compatibleModels.length ? (
             <div>
@@ -159,7 +163,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           ) : null}
 
           {specs.length ? (
-            <div className="rounded-xl p-5 glass">
+            <div className="rounded-xl p-4 glass sm:p-5">
               <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-white">
                 Specifications
               </h2>
@@ -167,17 +171,19 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
                 {specs.map(([key, value]) => (
                   <div
                     key={key}
-                    className="flex justify-between gap-4 border-b border-white/5 py-2 text-sm last:border-0"
+                    className="flex flex-col gap-0.5 border-b border-white/5 py-2.5 text-sm last:border-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
                   >
                     <dt className="text-muted-foreground">{key}</dt>
-                    <dd className="text-right text-white">{String(value)}</dd>
+                    <dd className="break-words text-white sm:max-w-[60%] sm:text-right">
+                      {String(value)}
+                    </dd>
                   </div>
                 ))}
               </dl>
             </div>
           ) : null}
 
-          <div className="flex flex-wrap gap-3">
+          <div className="hidden flex-wrap gap-3 lg:flex">
             <Button asChild variant="glow" size="lg">
               <a
                 href={getWhatsAppLink(waMessage)}
@@ -195,8 +201,14 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
       </div>
 
+      <ProductMobileBar
+        price={product.price}
+        compareAtPrice={product.compareAtPrice}
+        whatsappHref={getWhatsAppLink(waMessage)}
+      />
+
       {related.length ? (
-        <section className="mt-20">
+        <section className="mt-12 sm:mt-20">
           <SectionHeading
             eyebrow="More like this"
             title="Related products"

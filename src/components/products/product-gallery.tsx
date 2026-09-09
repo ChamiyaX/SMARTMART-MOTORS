@@ -26,33 +26,34 @@ export function ProductGallery({ images, alt, className }: ProductGalleryProps) 
 
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="relative aspect-square overflow-hidden rounded-xl glass">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl glass sm:aspect-square">
         <Image
           src={gallery[active]}
           alt={`${alt} — image ${active + 1}`}
           fill
-          className="object-cover"
+          className="object-contain sm:object-cover"
           sizes="(max-width:768px) 100vw, 50vw"
           priority
         />
       </div>
 
       {gallery.length > 1 ? (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto px-1 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {gallery.map((src, index) => (
             <button
               key={`${src}-${index}`}
               type="button"
               onClick={() => setActive(index)}
               className={cn(
-                "relative h-16 w-16 shrink-0 overflow-hidden rounded-md border transition",
+                "relative h-[4.5rem] w-[4.5rem] shrink-0 snap-start overflow-hidden rounded-lg border transition sm:h-16 sm:w-16",
                 index === active
-                  ? "shadow-glow border-primary"
+                  ? "border-primary shadow-glow"
                   : "border-white/10 hover:border-white/30"
               )}
               aria-label={`View image ${index + 1}`}
+              aria-current={index === active ? "true" : undefined}
             >
-              <Image src={src} alt="" fill className="object-cover" sizes="64px" />
+              <Image src={src} alt="" fill className="object-cover" sizes="72px" />
             </button>
           ))}
         </div>

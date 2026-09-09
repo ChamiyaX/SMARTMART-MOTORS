@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +9,9 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({ className }: WhatsAppButtonProps) {
+  const pathname = usePathname();
+  const isProductDetail = /^\/products\/[^/]+$/.test(pathname);
+
   return (
     <a
       href="https://wa.me/94775475141"
@@ -16,6 +20,7 @@ export function WhatsAppButton({ className }: WhatsAppButtonProps) {
       aria-label="Chat on WhatsApp"
       className={cn(
         "animate-pulse-glow fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110",
+        isProductDetail && "hidden lg:flex",
         className
       )}
     >

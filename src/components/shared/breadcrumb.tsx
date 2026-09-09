@@ -26,7 +26,13 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
                   {item.label}
                 </Link>
               ) : (
-                <span className={cn(isLast && "font-medium text-white")}>
+                <span
+                  className={cn(
+                    isLast &&
+                      "line-clamp-1 max-w-[min(72vw,18rem)] font-medium text-white sm:max-w-none"
+                  )}
+                  title={isLast ? item.label : undefined}
+                >
                   {item.label}
                 </span>
               )}

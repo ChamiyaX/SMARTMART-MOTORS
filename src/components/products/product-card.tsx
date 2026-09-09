@@ -53,7 +53,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             {product.brand.name}
           </p>
         ) : null}
-        <h3 className="font-display text-base font-semibold text-white transition-colors group-hover:text-primary">
+        <h3 className="line-clamp-2 min-h-[2.75rem] font-display text-base font-semibold leading-snug text-white transition-colors group-hover:text-primary">
           {product.name}
         </h3>
         <div className="mt-auto flex items-baseline gap-2 pt-1">
