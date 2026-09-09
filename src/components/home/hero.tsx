@@ -53,8 +53,7 @@ export function Hero() {
           transition={{ duration: 0.55, delay: 0.22 }}
           className="mt-4 max-w-lg text-base text-white/70 sm:text-lg"
         >
-          Genuine vehicle spare parts imported from China — delivered across Sri Lanka
-          with trust and speed.
+          Vehicle imported and delivered across Sri Lanka with trust and speed.
         </motion.p>
 
         <motion.div
