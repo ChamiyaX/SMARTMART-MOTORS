@@ -6,7 +6,8 @@ import { Hero } from "@/components/home/hero";
 import { StatsCounter } from "@/components/home/stats-counter";
 import { WhyUs } from "@/components/home/why-us";
 import { getBrands } from "@/lib/data/brands";
-import { getRootCategories } from "@/lib/data/categories";
+import { getCategoryCoverMap, getRootCategories } from "@/lib/data/categories";
+import { resolveCategoryImage } from "@/lib/category-images";
 import { getFeaturedProducts } from "@/lib/data/products";
 import { organizationJsonLd, generateSeoMetadata } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
@@ -26,7 +27,14 @@ export default async function HomePage() {
   ]);
 
   const featured = serializeProducts(featuredRaw);
-  const categories = categoriesRaw.map(serializeCategory);
+  const coverMap = await safeQuery(
+    () => getCategoryCoverMap(categoriesRaw.map((category) => category.id)),
+    new Map<string, string>()
+  );
+  const categories = categoriesRaw.map((category) => ({
+    ...serializeCategory(category),
+    displayImage: resolveCategoryImage(category, coverMap.get(category.id)),
+  }));
   const brands = brandsRaw.map(serializeBrand);
 
   return (

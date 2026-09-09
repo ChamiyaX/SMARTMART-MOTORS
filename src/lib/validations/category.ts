@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { mediaUrlSchema } from "@/lib/validations/media";
+
 export const createCategorySchema = z.object({
   name: z.string().trim().min(2).max(120),
   slug: z
@@ -10,7 +12,7 @@ export const createCategorySchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format")
     .optional(),
   description: z.string().max(2000).optional().nullable(),
-  image: z.string().url().optional().nullable().or(z.literal("")),
+  image: mediaUrlSchema.optional().nullable().or(z.literal("")),
   parentId: z.string().optional().nullable(),
   isActive: z.boolean().default(true),
   sortOrder: z.coerce.number().int().min(0).default(0),

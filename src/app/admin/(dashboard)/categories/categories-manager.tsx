@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Pencil, Plus } from "lucide-react";
+import { Loader2, Pencil, Plus, Upload } from "lucide-react";
 import type { Category } from "@prisma/client";
 
 import { createCategory, updateCategory, deleteCategory } from "@/lib/actions/categories";
@@ -38,10 +38,12 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<CategoryRow | null>(null);
   const [pending, startTransition] = useTransition();
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     slug: "",
     description: "",
+    image: "",
     isActive: true,
     sortOrder: 0,
   });
@@ -52,6 +54,7 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
       name: "",
       slug: "",
       description: "",
+      image: "",
       isActive: true,
       sortOrder: 0,
     });
@@ -64,10 +67,29 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
       name: cat.name,
       slug: cat.slug,
       description: cat.description || "",
+      image: cat.image || "",
       isActive: cat.isActive,
       sortOrder: cat.sortOrder,
     });
     setOpen(true);
+  }
+
+  async function handleImageUpload(file: File) {
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("folder", "smartmart-motors/categories");
+      const res = await fetch("/api/upload", { method: "POST", body });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      setForm((current) => ({ ...current, image: data.url as string }));
+      toast.success("Category image uploaded");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
   }
 
   function submit() {
@@ -135,6 +157,36 @@ export function CategoriesManager({ categories }: { categories: CategoryRow[] })
                   }
                   className="border-white/10 bg-white/[0.04]"
                 />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Cover image</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={form.image}
+                    onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
+                    placeholder="https://... or /api/files/..."
+                    className="border-white/10 bg-white/[0.04]"
+                  />
+                  <label className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-3 text-xs text-primary hover:bg-primary/20">
+                    {uploading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Upload className="h-3.5 w-3.5" />
+                    )}
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploading}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) void handleImageUpload(file);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
               <div className="flex items-center justify-between rounded-lg border border-white/10 px-3 py-2">
                 <Label>Active</Label>

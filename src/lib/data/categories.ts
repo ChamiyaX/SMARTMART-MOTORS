@@ -52,3 +52,30 @@ export const getRootCategories = cache(async () => {
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
   });
 });
+
+/** First primary product image per category — used when category.image is empty. */
+export async function getCategoryCoverMap(categoryIds: string[]) {
+  if (!categoryIds.length) return new Map<string, string>();
+
+  const images = await prisma.productImage.findMany({
+    where: {
+      isPrimary: true,
+      product: { isActive: true, categoryId: { in: categoryIds } },
+    },
+    select: {
+      url: true,
+      product: { select: { categoryId: true, updatedAt: true } },
+    },
+    orderBy: { product: { updatedAt: "desc" } },
+  });
+
+  const covers = new Map<string, string>();
+  for (const image of images) {
+    const categoryId = image.product.categoryId;
+    if (!covers.has(categoryId)) {
+      covers.set(categoryId, image.url);
+    }
+  }
+
+  return covers;
+}

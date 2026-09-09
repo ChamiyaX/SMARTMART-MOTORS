@@ -1,12 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Category } from "@/types";
+import { CategoryCoverImage } from "@/components/shared/category-cover-image";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { FadeIn } from "@/components/shared/fade-in";
 import { cn } from "@/lib/utils";
 
+type CategoryWithCover = Category & { displayImage: string };
+
 interface CategoriesShowcaseProps {
-  categories: Category[];
+  categories: CategoryWithCover[];
 }
 
 export function CategoriesShowcase({ categories }: CategoriesShowcaseProps) {
@@ -30,17 +32,11 @@ export function CategoriesShowcase({ categories }: CategoriesShowcaseProps) {
                 "group relative block aspect-[16/10] overflow-hidden rounded-xl border border-white/10"
               )}
             >
-              {category.image ? (
-                <Image
-                  src={category.image}
-                  alt={category.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width:768px) 100vw, 33vw"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]" />
-              )}
+              <CategoryCoverImage
+                src={category.displayImage}
+                alt={category.name}
+                className="transition-transform duration-500 group-hover:scale-105"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-5">
                 <h3 className="font-display text-xl font-semibold text-white transition-colors group-hover:text-primary">

@@ -1,11 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { CategoryCoverImage } from "@/components/shared/category-cover-image";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { FadeIn } from "@/components/shared/fade-in";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { EmptyState } from "@/components/shared/empty-state";
-import { getCategories } from "@/lib/data/categories";
+import { resolveCategoryImage } from "@/lib/category-images";
+import { getCategories, getCategoryCoverMap } from "@/lib/data/categories";
 import { generateSeoMetadata } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
 import { serializeCategory } from "@/lib/serialize";
@@ -18,7 +19,14 @@ export const metadata = generateSeoMetadata({
 
 export default async function CategoriesPage() {
   const categoriesRaw = await safeQuery(() => getCategories(), []);
-  const categories = categoriesRaw.map(serializeCategory);
+  const coverMap = await safeQuery(
+    () => getCategoryCoverMap(categoriesRaw.map((category) => category.id)),
+    new Map<string, string>()
+  );
+  const categories = categoriesRaw.map((category) => ({
+    ...serializeCategory(category),
+    displayImage: resolveCategoryImage(category, coverMap.get(category.id)),
+  }));
 
   return (
     <div className="container pb-20 pt-28">
@@ -44,17 +52,11 @@ export default async function CategoriesPage() {
                 prefetch
                 className="group relative block aspect-[16/10] overflow-hidden rounded-xl border border-white/10"
               >
-                {category.image ? (
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width:768px) 100vw, 33vw"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]" />
-                )}
+                <CategoryCoverImage
+                  src={category.displayImage}
+                  alt={category.name}
+                  className="transition-transform duration-500 group-hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5">
                   <h2 className="font-display text-xl font-semibold text-white transition-colors group-hover:text-primary">
