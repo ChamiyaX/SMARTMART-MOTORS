@@ -15,7 +15,7 @@ export function WhatsAppButton({ className }: WhatsAppButtonProps) {
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
       className={cn(
-        "animate-pulse-glow fixed bottom-16 right-6 z-[9998] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110",
+        "animate-pulse-glow fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110",
         className
       )}
     >

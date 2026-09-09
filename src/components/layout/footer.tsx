@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { BrandLogo } from "@/components/shared/brand-logo";
+import { DeveloperCreditBar } from "@/components/layout/developer-credit-bar";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -48,7 +48,7 @@ const categories = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/10 bg-secondary/80 pb-14 backdrop-blur-xl">
+    <footer className="mt-24 border-t border-white/10 bg-secondary/80 backdrop-blur-xl">
       <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <BrandLogo height={48} className="max-w-[220px]" />
@@ -150,10 +150,7 @@ export function Footer() {
         </div>
       </div>
 
-      <Separator />
-      <div className="container py-6 text-center text-xs text-muted-foreground sm:text-left">
-        <p>© {new Date().getFullYear()} SmartMart Motors. All rights reserved.</p>
-      </div>
+      <DeveloperCreditBar />
     </footer>
   );
 }
