@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
-import { ProductDescriptionSection } from "@/components/products/product-description-section";
+import { ProductDescription } from "@/components/products/product-description";
 import { ProductGallery } from "@/components/products/product-gallery";
-import { ProductMobileBar } from "@/components/products/product-mobile-bar";
 import { ProductGrid } from "@/components/products/product-grid";
-import { ProductSpecsList } from "@/components/products/product-specs-list";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Badge } from "@/components/ui/badge";
@@ -72,8 +70,12 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       ? Object.entries(product.specifications)
       : [];
 
+  const descriptionPreview =
+    product.description.split(/\r?\n/).find((line) => line.trim()) ||
+    product.description.slice(0, 160);
+
   return (
-    <div className="container pb-36 pt-20 sm:px-6 sm:pb-20 sm:pt-28 lg:pb-20">
+    <div className="container pb-20 pt-28">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -106,16 +108,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         }}
       />
 
-      <Link
-        href="/products"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground transition hover:text-primary sm:hidden"
-      >
-        <ChevronLeft className="h-4 w-4" />
-        Back to products
-      </Link>
-
       <Breadcrumb
-        className="mb-6 hidden sm:block"
         items={[
           { label: "Home", href: "/" },
           { label: "Products", href: "/products" },
@@ -123,56 +116,72 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         ]}
       />
 
-      <div className="grid gap-5 lg:grid-cols-2 lg:gap-10">
-        <div className="order-1 space-y-3 lg:order-2 lg:col-start-2">
-          {product.brand?.name ? (
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              {product.brand.name}
-            </p>
-          ) : null}
-          <h1 className="font-display text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
-            {product.name}
-          </h1>
+      <SectionHeading
+        eyebrow={product.brand?.name || "Product"}
+        title={product.name}
+        description={descriptionPreview}
+        align="left"
+      />
+
+      <div className="grid items-start gap-10 lg:grid-cols-2">
+        <ProductGallery images={product.images || []} alt={product.name} />
+
+        <div className="space-y-6">
           <div className="flex flex-wrap gap-2">
             {product.isFeatured ? <Badge variant="featured">Featured</Badge> : null}
             {product.isNewArrival ? <Badge variant="new">New</Badge> : null}
             <Badge variant="outline">{product.stockStatus.replaceAll("_", " ")}</Badge>
           </div>
+
           <div className="flex items-baseline gap-3">
-            <span className="font-display text-2xl font-bold text-primary sm:text-3xl">
+            <span className="font-display text-3xl font-bold text-primary">
               {formatPrice(product.price)}
             </span>
             {product.compareAtPrice != null &&
             Number(product.compareAtPrice) > Number(product.price) ? (
-              <span className="text-base text-muted-foreground line-through sm:text-lg">
+              <span className="text-lg text-muted-foreground line-through">
                 {formatPrice(product.compareAtPrice)}
               </span>
             ) : null}
           </div>
-          <p className="text-xs text-muted-foreground sm:text-sm">SKU: {product.sku}</p>
-        </div>
 
-        <div className="order-2 lg:sticky lg:top-24 lg:order-1 lg:col-start-1 lg:row-span-2 lg:self-start">
-          <ProductGallery images={product.images || []} alt={product.name} />
-        </div>
+          <p className="text-sm text-muted-foreground">SKU: {product.sku}</p>
 
-        <div className="order-3 space-y-5 sm:space-y-6 lg:order-3 lg:col-start-2">
-          <ProductDescriptionSection description={product.description} />
+          <ProductDescription description={product.description} />
 
           {product.compatibleModels.length ? (
-            <div className="rounded-xl p-4 glass sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0">
+            <div>
               <h2 className="mb-2 font-display text-sm font-semibold uppercase tracking-wider text-white">
                 Compatible models
               </h2>
-              <p className="break-words text-sm leading-relaxed text-muted-foreground">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {product.compatibleModels.join(", ")}
               </p>
             </div>
           ) : null}
 
-          <ProductSpecsList specs={specs} />
+          {specs.length ? (
+            <div className="rounded-xl p-6 glass">
+              <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-white">
+                Specifications
+              </h2>
+              <dl className="space-y-2">
+                {specs.map(([key, value]) => (
+                  <div
+                    key={key}
+                    className="flex flex-col gap-1 border-b border-white/5 py-2 text-sm last:border-0 sm:flex-row sm:justify-between sm:gap-4"
+                  >
+                    <dt className="text-muted-foreground">{key}</dt>
+                    <dd className="break-words text-white sm:text-right">
+                      {String(value)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ) : null}
 
-          <div className="hidden flex-wrap gap-3 lg:flex">
+          <div className="flex flex-wrap gap-3">
             <Button asChild variant="glow" size="lg">
               <a
                 href={getWhatsAppLink(waMessage)}
@@ -190,23 +199,15 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         </div>
       </div>
 
-      <ProductMobileBar
-        price={product.price}
-        compareAtPrice={product.compareAtPrice}
-        whatsappHref={getWhatsAppLink(waMessage)}
-        productName={product.name}
-      />
-
       {related.length ? (
-        <section className="mt-10 sm:mt-20">
+        <section className="mt-20">
           <SectionHeading
             eyebrow="More like this"
             title="Related products"
             description="Other parts customers often view with this item."
             align="left"
-            className="mb-6 sm:mb-10"
           />
-          <ProductGrid products={related} className="gap-3 sm:gap-5" />
+          <ProductGrid products={related} />
         </section>
       ) : null}
     </div>
