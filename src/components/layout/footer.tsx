@@ -38,18 +38,10 @@ const quickLinks = [
   { href: "/faq", label: "FAQ" },
 ];
 
-const categories = [
-  { href: "/categories/engine", label: "Engine Parts" },
-  { href: "/categories/brakes", label: "Brakes" },
-  { href: "/categories/lighting", label: "Lighting" },
-  { href: "/categories/suspension", label: "Suspension" },
-  { href: "/categories/accessories", label: "Accessories" },
-];
-
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-white/10 bg-secondary/80 backdrop-blur-xl">
-      <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-4">
           <BrandLogo height={48} className="max-w-[220px]" />
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
@@ -80,24 +72,6 @@ export function Footer() {
           </h3>
           <ul className="space-y-2">
             {quickLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="text-sm text-muted-foreground transition hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="mb-4 font-display text-sm font-semibold uppercase tracking-wider text-white">
-            Categories
-          </h3>
-          <ul className="space-y-2">
-            {categories.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
