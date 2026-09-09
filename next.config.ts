@@ -44,6 +44,9 @@ const nextConfig: NextConfig = {
       {
         pathname: "/api/files/**",
       },
+      {
+        pathname: "/images/**",
+      },
     ],
     remotePatterns: [
       {
