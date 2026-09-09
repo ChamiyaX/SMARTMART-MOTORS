@@ -70,12 +70,8 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       ? Object.entries(product.specifications)
       : [];
 
-  const descriptionPreview =
-    product.description.split(/\r?\n/).find((line) => line.trim()) ||
-    product.description.slice(0, 160);
-
   return (
-    <div className="container pb-20 pt-28">
+    <div className="container min-w-0 overflow-x-clip pb-20 pt-28">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -119,27 +115,27 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       <SectionHeading
         eyebrow={product.brand?.name || "Product"}
         title={product.name}
-        description={descriptionPreview}
         align="left"
+        className="max-w-none"
       />
 
-      <div className="grid items-start gap-10 lg:grid-cols-2">
+      <div className="grid w-full min-w-0 grid-cols-1 items-start gap-10 lg:grid-cols-2">
         <ProductGallery images={product.images || []} alt={product.name} />
 
-        <div className="space-y-6">
+        <div className="w-full min-w-0 max-w-full space-y-6">
           <div className="flex flex-wrap gap-2">
             {product.isFeatured ? <Badge variant="featured">Featured</Badge> : null}
             {product.isNewArrival ? <Badge variant="new">New</Badge> : null}
             <Badge variant="outline">{product.stockStatus.replaceAll("_", " ")}</Badge>
           </div>
 
-          <div className="flex items-baseline gap-3">
-            <span className="font-display text-3xl font-bold text-primary">
+          <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
+            <span className="font-display text-2xl font-bold text-primary sm:text-3xl">
               {formatPrice(product.price)}
             </span>
             {product.compareAtPrice != null &&
             Number(product.compareAtPrice) > Number(product.price) ? (
-              <span className="text-lg text-muted-foreground line-through">
+              <span className="text-base text-muted-foreground line-through sm:text-lg">
                 {formatPrice(product.compareAtPrice)}
               </span>
             ) : null}
@@ -161,7 +157,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           ) : null}
 
           {specs.length ? (
-            <div className="rounded-xl p-6 glass">
+            <div className="min-w-0 rounded-xl p-4 glass sm:p-6">
               <h2 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-white">
                 Specifications
               </h2>
@@ -181,18 +177,28 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             </div>
           ) : null}
 
-          <div className="flex flex-wrap gap-3">
-            <Button asChild variant="glow" size="lg">
+          <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button
+              asChild
+              variant="glow"
+              size="lg"
+              className="h-12 w-full min-w-0 whitespace-normal px-4 sm:w-auto sm:whitespace-nowrap sm:px-8"
+            >
               <a
                 href={getWhatsAppLink(waMessage)}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="h-4 w-4" />
+                <MessageCircle className="h-4 w-4 shrink-0" />
                 Inquire on WhatsApp
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 w-full min-w-0 sm:w-auto"
+            >
               <Link href="/contact">Contact us</Link>
             </Button>
           </div>
@@ -200,14 +206,15 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       </div>
 
       {related.length ? (
-        <section className="mt-20">
+        <section className="mt-20 w-full min-w-0 max-w-full">
           <SectionHeading
             eyebrow="More like this"
             title="Related products"
             description="Other parts customers often view with this item."
             align="left"
+            className="max-w-none"
           />
-          <ProductGrid products={related} />
+          <ProductGrid products={related} className="w-full min-w-0" />
         </section>
       ) : null}
     </div>

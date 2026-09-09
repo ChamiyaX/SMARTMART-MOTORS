@@ -25,8 +25,8 @@ export function ProductGallery({ images, alt, className }: ProductGalleryProps) 
   const [active, setActive] = React.useState(0);
 
   return (
-    <div className={cn("space-y-3", className)}>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
+    <div className={cn("w-full min-w-0 max-w-full space-y-3", className)}>
+      <div className="relative aspect-[4/3] w-full max-w-full overflow-hidden rounded-xl border border-white/10">
         <Image
           src={gallery[active]}
           alt={`${alt} — image ${active + 1}`}
@@ -38,7 +38,7 @@ export function ProductGallery({ images, alt, className }: ProductGalleryProps) 
       </div>
 
       {gallery.length > 1 ? (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex w-full max-w-full gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {gallery.map((src, index) => (
             <button
               key={`${src}-${index}`}

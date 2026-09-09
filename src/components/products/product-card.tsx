@@ -21,7 +21,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
     <Link
       href={`/products/${product.slug}`}
       className={cn(
-        "neon-glow-hover group relative flex flex-col overflow-hidden rounded-xl glass",
+        "neon-glow-hover group relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl glass",
         className
       )}
     >

@@ -12,7 +12,7 @@ export function ProductDescription({ description, className }: ProductDescriptio
   return (
     <p
       className={cn(
-        "whitespace-pre-wrap break-words leading-relaxed text-white/80",
+        "max-w-full whitespace-pre-wrap break-words leading-relaxed text-white/80",
         className
       )}
     >

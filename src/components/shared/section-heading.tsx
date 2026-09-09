@@ -18,7 +18,7 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-10 max-w-2xl space-y-3",
+        "mb-10 min-w-0 max-w-2xl space-y-3",
         align === "center" && "mx-auto text-center",
         className
       )}
@@ -28,11 +28,11 @@ export function SectionHeading({
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
+      <h2 className="break-words font-display text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
         {title}
       </h2>
       {description ? (
-        <p className="text-base text-muted-foreground">{description}</p>
+        <p className="break-words text-base text-muted-foreground">{description}</p>
       ) : null}
     </div>
   );
