@@ -886,20 +886,28 @@ async function main() {
       seoDescription:
         "Learn how SmartMart Motors supplies premium Chinese OEM automotive spare parts across Sri Lanka.",
       content: {
+        headline: "About SmartMart Motors",
+        body: "Premium automotive spare parts trusted by workshops and drivers across Sri Lanka.",
         mission:
           "To deliver reliable, affordable OEM-quality spare parts so every Sri Lankan vehicle stays on the road longer.",
         story:
-          "SmartMart Motors sources directly from certified Chinese manufacturers producing parts to Japanese and Korean OEM specifications. We specialise in high-turn SKUs for workshops, fleets and private owners.",
+          "SmartMart Motors sources directly from certified Chinese manufacturers producing parts to Japanese and Korean OEM specifications. We serve retail customers, garages, and fleet operators island-wide.",
+        imageUrl:
+          "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=80",
         values: [
-          "Quality first",
-          "Transparent pricing",
-          "Rapid fulfilment",
-          "Expert advice",
+          {
+            title: "Quality first",
+            text: "We stock Chinese OEM-grade parts selected for fitment accuracy and durability.",
+          },
+          {
+            title: "Honest guidance",
+            text: "Tell us your vehicle — we'll help you match the right component the first time.",
+          },
+          {
+            title: "Island-wide reach",
+            text: "From Colombo to every district, we ship parts where you need them.",
+          },
         ],
-        contact: {
-          phone: "0775475141",
-          email: "smartmartmotors@gmail.com",
-        },
       },
     },
     create: {
@@ -910,20 +918,28 @@ async function main() {
       seoDescription:
         "Learn how SmartMart Motors supplies premium Chinese OEM automotive spare parts across Sri Lanka.",
       content: {
+        headline: "About SmartMart Motors",
+        body: "Premium automotive spare parts trusted by workshops and drivers across Sri Lanka.",
         mission:
           "To deliver reliable, affordable OEM-quality spare parts so every Sri Lankan vehicle stays on the road longer.",
         story:
-          "SmartMart Motors sources directly from certified Chinese manufacturers producing parts to Japanese and Korean OEM specifications. We specialise in high-turn SKUs for workshops, fleets and private owners.",
+          "SmartMart Motors sources directly from certified Chinese manufacturers producing parts to Japanese and Korean OEM specifications. We serve retail customers, garages, and fleet operators island-wide.",
+        imageUrl:
+          "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=80",
         values: [
-          "Quality first",
-          "Transparent pricing",
-          "Rapid fulfilment",
-          "Expert advice",
+          {
+            title: "Quality first",
+            text: "We stock Chinese OEM-grade parts selected for fitment accuracy and durability.",
+          },
+          {
+            title: "Honest guidance",
+            text: "Tell us your vehicle — we'll help you match the right component the first time.",
+          },
+          {
+            title: "Island-wide reach",
+            text: "From Colombo to every district, we ship parts where you need them.",
+          },
         ],
-        contact: {
-          phone: "0775475141",
-          email: "smartmartmotors@gmail.com",
-        },
       },
     },
   });

@@ -9,6 +9,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   FileText,
+  Info,
   LogOut,
   Mail,
   Package,
@@ -35,6 +36,7 @@ const navItems = [
   { href: "/admin/messages", label: "Messages", icon: Mail },
   { href: "/admin/media", label: "Media", icon: ImageIcon },
   { href: "/admin/content", label: "Content", icon: FileText },
+  { href: "/admin/about", label: "About Page", icon: Info },
   { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },
   {
     href: "/admin/users",

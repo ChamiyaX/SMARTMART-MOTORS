@@ -5,38 +5,37 @@ import { FadeIn } from "@/components/shared/fade-in";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { parseAboutContent } from "@/lib/about-page";
 import { getPageContent } from "@/lib/data/settings";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateSeoMetadata } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
+import { resolveMediaUrl } from "@/lib/utils";
 
-export const metadata = generateSeoMetadata({
-  title: "About Us",
-  path: "/about",
-  description: `Learn about ${SITE_CONFIG.name} — premium automotive spare parts for Sri Lankan drivers and workshops.`,
-});
+export async function generateMetadata() {
+  const page = await safeQuery(() => getPageContent("about"), null);
 
-const values = [
-  {
-    title: "Quality first",
-    text: "We stock Chinese OEM-grade parts selected for fitment accuracy and durability.",
-  },
-  {
-    title: "Honest guidance",
-    text: "Tell us your vehicle — we’ll help you match the right component the first time.",
-  },
-  {
-    title: "Island-wide reach",
-    text: "From Colombo to every district, we ship parts where you need them.",
-  },
-];
+  return generateSeoMetadata({
+    title: page?.seoTitle || "About Us",
+    description:
+      page?.seoDescription ||
+      `Learn about ${SITE_CONFIG.name} — premium automotive spare parts for Sri Lankan drivers and workshops.`,
+    path: "/about",
+  });
+}
 
 export default async function AboutPage() {
   const page = await safeQuery(() => getPageContent("about"), null);
-  const content =
-    page?.content && typeof page.content === "object"
-      ? (page.content as { headline?: string; body?: string; mission?: string })
-      : null;
+  const content = parseAboutContent(page?.content, page?.title);
+  const imageSrc = resolveMediaUrl(content.imageUrl);
+
+  if (page && !page.isPublished) {
+    return (
+      <div className="container pb-20 pt-28">
+        <p className="text-muted-foreground">This page is currently unavailable.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container pb-20 pt-28">
@@ -45,11 +44,8 @@ export default async function AboutPage() {
       <FadeIn>
         <SectionHeading
           eyebrow="Our story"
-          title={content?.headline || page?.title || "About SmartMart Motors"}
-          description={
-            content?.body ||
-            `${SITE_CONFIG.name} supplies premium automotive spare parts trusted by workshops and drivers across Sri Lanka.`
-          }
+          title={content.headline}
+          description={content.body}
           align="left"
         />
       </FadeIn>
@@ -58,12 +54,13 @@ export default async function AboutPage() {
         <FadeIn delay={0.08}>
           <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
             <Image
-              src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=80"
-              alt="Automotive workshop"
+              src={imageSrc}
+              alt={content.headline}
               fill
               className="object-cover"
               sizes="(max-width:1024px) 100vw, 50vw"
               priority
+              unoptimized={imageSrc.startsWith("/api/")}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           </div>
@@ -71,15 +68,8 @@ export default async function AboutPage() {
 
         <FadeIn delay={0.12}>
           <div className="space-y-5 text-muted-foreground">
-            <p className="text-base leading-relaxed text-white/80">
-              {content?.mission ||
-                "We started with a simple idea: make reliable OEM-quality parts easier to find, price, and fit — without the noise of overhyped retail."}
-            </p>
-            <p className="text-sm leading-relaxed">
-              Based in {SITE_CONFIG.address}, we serve retail customers, garages, and
-              fleet operators with curated inventory spanning engine, braking, suspension,
-              lighting, and electrical categories.
-            </p>
+            <p className="text-base leading-relaxed text-white/80">{content.mission}</p>
+            <p className="text-sm leading-relaxed">{content.story}</p>
             <Button asChild variant="glow">
               <Link href="/products">Browse products</Link>
             </Button>
@@ -88,8 +78,8 @@ export default async function AboutPage() {
       </div>
 
       <div className="mt-20 grid gap-6 md:grid-cols-3">
-        {values.map((item, index) => (
-          <FadeIn key={item.title} delay={index * 0.06}>
+        {content.values.map((item, index) => (
+          <FadeIn key={`${item.title}-${index}`} delay={index * 0.06}>
             <div className="h-full rounded-xl p-6 glass">
               <h3 className="font-display text-lg font-semibold text-white">
                 {item.title}

@@ -7,14 +7,10 @@ export const dynamic = "force-dynamic";
 
 export default async function ContentPage() {
   let home = null;
-  let about = null;
   let dbError: string | null = null;
 
   try {
-    [home, about] = await Promise.all([
-      prisma.pageContent.findUnique({ where: { page: "home" } }),
-      prisma.pageContent.findUnique({ where: { page: "about" } }),
-    ]);
+    home = await prisma.pageContent.findUnique({ where: { page: "home" } });
   } catch {
     dbError = DB_CONNECT_MESSAGE;
   }
@@ -23,14 +19,14 @@ export default async function ContentPage() {
     <div>
       <PageHeader
         title="Content"
-        description="Edit home and about page copy as structured JSON."
+        description="Edit home page structured content. Use About Page for the about section."
       />
       {dbError && (
         <div className="mb-6 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
           {dbError}
         </div>
       )}
-      <ContentEditor home={home} about={about} />
+      <ContentEditor home={home} />
     </div>
   );
 }

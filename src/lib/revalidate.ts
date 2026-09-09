@@ -18,6 +18,7 @@ export function revalidateCatalogue() {
 /** Settings and page content feed the navbar, footer and static pages. */
 export function revalidateSiteContent() {
   revalidatePath("/", "layout");
+  revalidatePath("/about");
   revalidatePath("/sitemap.xml");
 }
 
