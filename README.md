@@ -68,27 +68,36 @@ npm run dev
 
 **Seed admin**
 
-| Field    | Value   |
-| -------- | ------- |
-| Username | `admin` |
-| Password | `admin` |
+```bash
+SEED_ADMIN_PASSWORD="your-strong-password" npm run db:seed
+```
 
-Change this password immediately in production.
+| Field    | Value                                         |
+| -------- | --------------------------------------------- |
+| Username | `admin` (maps to `admin@smartmartmotors.com`) |
+| Password | Value you set in `SEED_ADMIN_PASSWORD`        |
+
+Rotate an existing admin password:
+
+```bash
+ADMIN_PASSWORD="your-new-strong-password" npm run admin:rotate-password
+```
 
 ## Scripts
 
-| Command              | Description                        |
-| -------------------- | ---------------------------------- |
-| `npm run dev`        | Dev server (Turbopack)             |
-| `npm run build`      | Prisma generate + production build |
-| `npm run start`      | Start production server            |
-| `npm run lint`       | ESLint                             |
-| `npm run typecheck`  | TypeScript check                   |
-| `npm run format`     | Prettier                           |
-| `npm run db:push`    | Push Prisma schema                 |
-| `npm run db:migrate` | Create/apply migrations            |
-| `npm run db:seed`    | Seed catalogue + admin             |
-| `npm run db:studio`  | Prisma Studio                      |
+| Command                         | Description                        |
+| ------------------------------- | ---------------------------------- |
+| `npm run dev`                   | Dev server (Turbopack)             |
+| `npm run build`                 | Prisma generate + production build |
+| `npm run start`                 | Start production server            |
+| `npm run lint`                  | ESLint                             |
+| `npm run typecheck`             | TypeScript check                   |
+| `npm run format`                | Prettier                           |
+| `npm run db:push`               | Push Prisma schema                 |
+| `npm run db:migrate`            | Create/apply migrations            |
+| `npm run db:seed`               | Seed catalogue + admin             |
+| `npm run admin:rotate-password` | Rotate admin credentials           |
+| `npm run db:studio`             | Prisma Studio                      |
 
 ## Project structure
 

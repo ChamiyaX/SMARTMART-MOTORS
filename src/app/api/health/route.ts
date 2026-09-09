@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { getUploadProvider } from "@/lib/upload";
-
 export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ ok: true });
+  }
+
+  const { getUploadProvider } = await import("@/lib/upload");
+
   return NextResponse.json({
     ok: true,
     service: "smartmart-motors",

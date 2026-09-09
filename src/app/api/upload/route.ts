@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { MAX_UPLOAD_SIZE_MB } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
+import { validateImageUpload } from "@/lib/upload-validation";
 import { getUploadProvider, uploadMedia } from "@/lib/upload";
 
 const MAX_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
@@ -27,10 +28,7 @@ export async function POST(request: NextRequest) {
     const provider = getUploadProvider();
     if (!provider) {
       return NextResponse.json(
-        {
-          error:
-            "Image upload is not configured. Set DATABASE_URL on Vercel, or add SUPABASE_SERVICE_ROLE_KEY / Cloudinary keys.",
-        },
+        { error: "Image upload is not available." },
         { status: 503 }
       );
     }
@@ -42,13 +40,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File is required" }, { status: 400 });
     }
 
-    if (!file.type.startsWith("image/")) {
-      return NextResponse.json(
-        { error: "Only image uploads are allowed" },
-        { status: 400 }
-      );
-    }
-
     if (file.size > MAX_BYTES) {
       return NextResponse.json(
         { error: `File exceeds ${MAX_UPLOAD_SIZE_MB}MB limit` },
@@ -57,11 +48,16 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    const validation = validateImageUpload(file, buffer);
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
+    }
+
     const folder = String(formData.get("folder") || "smartmart-motors");
     const result = await uploadMedia(buffer, {
       folder,
       filename: file.name,
-      contentType: file.type,
+      contentType: validation.contentType,
     });
 
     const uploadedUrl =
@@ -89,16 +85,12 @@ export async function POST(request: NextRequest) {
       height: "height" in result ? result.height : undefined,
       format: "format" in result ? result.format : undefined,
       bytes: result.bytes,
-      provider,
     });
   } catch (error) {
     console.error("[api/upload]", error);
-
-    const message = error instanceof Error ? error.message : "Upload failed";
-    const hint = /column.*data|Unknown arg.*data/i.test(message)
-      ? " Run supabase/migrations/003_media_asset_data.sql in Supabase SQL editor, then redeploy."
-      : "";
-
-    return NextResponse.json({ error: `${message}${hint}` }, { status: 500 });
+    return NextResponse.json(
+      { error: "Upload failed. Please try again." },
+      { status: 500 }
+    );
   }
 }

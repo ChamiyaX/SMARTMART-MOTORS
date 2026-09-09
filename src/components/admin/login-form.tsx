@@ -41,8 +41,7 @@ export function LoginForm({ callbackUrl = "/admin" }: LoginFormProps) {
             type="text"
             autoComplete="username"
             required
-            placeholder="admin"
-            defaultValue="admin"
+            placeholder="Username or email"
             className="h-11 border-white/10 bg-white/[0.04] pl-10 text-white"
           />
         </div>
@@ -68,7 +67,7 @@ export function LoginForm({ callbackUrl = "/admin" }: LoginFormProps) {
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             required
-            placeholder="admin"
+            placeholder="Your password"
             className="h-11 border-white/10 bg-white/[0.04] pl-10 pr-10 text-white"
           />
           <button

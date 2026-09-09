@@ -1,9 +1,12 @@
 "use server";
 
 import { AuthError } from "next-auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { signIn, signOut } from "@/lib/auth";
+import { getRequestIp } from "@/lib/request-ip";
+import { rateLimit } from "@/lib/rate-limit";
 import { loginSchema } from "@/lib/validations/auth";
 
 export type AuthActionResult = {
@@ -28,7 +31,33 @@ export async function loginAction(
     };
   }
 
+  const headersList = await headers();
+  const ip = getRequestIp(headersList);
+  const ipLimited = rateLimit(`login:ip:${ip}`, {
+    limit: 8,
+    windowMs: 15 * 60_000,
+  });
+
+  if (!ipLimited.success) {
+    return {
+      success: false,
+      error: "Too many login attempts. Please wait 15 minutes and try again.",
+    };
+  }
+
   const { email, password } = parsed.data;
+
+  const accountLimited = rateLimit(`login:account:${email}`, {
+    limit: 5,
+    windowMs: 15 * 60_000,
+  });
+
+  if (!accountLimited.success) {
+    return {
+      success: false,
+      error: "Too many login attempts for this account. Try again later.",
+    };
+  }
   const callbackUrl = (formData.get("callbackUrl") as string) || "/admin";
 
   try {

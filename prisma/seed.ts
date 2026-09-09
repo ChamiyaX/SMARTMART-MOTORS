@@ -20,13 +20,19 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Seeding SmartMart Motors database...");
 
-  const passwordHash = await hash("admin", 12);
+  const seedPassword = process.env.SEED_ADMIN_PASSWORD?.trim();
+  if (!seedPassword || seedPassword.length < 12) {
+    throw new Error(
+      "Set SEED_ADMIN_PASSWORD (min 12 characters) before running db:seed."
+    );
+  }
+
+  const passwordHash = await hash(seedPassword, 12);
 
   const admin = await prisma.user.upsert({
     where: { email: "admin@smartmartmotors.com" },
     update: {
       name: "SmartMart Admin",
-      passwordHash,
       role: Role.SUPER_ADMIN,
     },
     create: {
@@ -38,7 +44,10 @@ async function main() {
     },
   });
 
-  console.log(`✓ Admin user: ${admin.email} (login: admin / admin)`);
+  console.log(`✓ Admin user: ${admin.email} (username: admin)`);
+  console.log(
+    "  Password was set only on first seed. Use npm run admin:rotate-password to change it."
+  );
 
   const categoryData = [
     {

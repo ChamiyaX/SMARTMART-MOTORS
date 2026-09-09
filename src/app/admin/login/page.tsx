@@ -41,9 +41,8 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
                 Reset Password
               </h1>
               <p className="text-sm text-white/50">
-                Password reset is available for Super Admins. Contact your system
-                administrator or use the seeded admin credentials after running{" "}
-                <code className="text-primary">db:seed</code>.
+                Password reset is handled by your system administrator. Contact HelaCode
+                or your SmartMart Motors site owner for access recovery.
               </p>
               <Link
                 href="/admin/login"

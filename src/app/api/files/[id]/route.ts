@@ -16,10 +16,14 @@ export async function GET(_request: Request, { params }: { params: Params }) {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 
+    const isInlineImage = asset.mimeType.startsWith("image/");
+
     return new NextResponse(Buffer.from(asset.data), {
       headers: {
         "Content-Type": asset.mimeType,
         "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
+        "Content-Disposition": isInlineImage ? "inline" : "attachment",
       },
     });
   } catch (error) {
