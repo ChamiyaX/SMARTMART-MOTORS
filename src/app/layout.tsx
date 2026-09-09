@@ -24,6 +24,15 @@ const syncopate = Syncopate({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
   ...generateSeoMetadata(),
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/images/logo-mark.png", type: "image/png", sizes: "512x512" },
+      { url: "/images/favicon.png", type: "image/png", sizes: "64x64" },
+    ],
+    shortcut: "/images/favicon.png",
+    apple: "/images/logo-mark.png",
+  },
 };
 
 export default function RootLayout({
