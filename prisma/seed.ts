@@ -784,7 +784,7 @@ async function main() {
       key: "seo",
       group: "seo",
       value: {
-        defaultTitle: "SmartMart Motors | Premium Auto Spare Parts Sri Lanka",
+        defaultTitle: "SmartMart Motors",
         titleTemplate: "%s | SmartMart Motors",
         defaultDescription:
           "Imported Chinese OEM-quality automotive spare parts for Toyota, Honda, Nissan, Suzuki and more. Colombo-based, island-wide delivery.",
@@ -817,7 +817,7 @@ async function main() {
     update: {
       title: "SmartMart Motors – Premium Auto Parts",
       isPublished: true,
-      seoTitle: "SmartMart Motors | Premium Automotive Spare Parts Sri Lanka",
+      seoTitle: "SmartMart Motors",
       seoDescription:
         "Shop OEM-quality Chinese imported spare parts for Japanese and Korean vehicles. Brake, engine, suspension, electrical and more.",
       content: {
@@ -848,7 +848,7 @@ async function main() {
       page: "home",
       title: "SmartMart Motors – Premium Auto Parts",
       isPublished: true,
-      seoTitle: "SmartMart Motors | Premium Automotive Spare Parts Sri Lanka",
+      seoTitle: "SmartMart Motors",
       seoDescription:
         "Shop OEM-quality Chinese imported spare parts for Japanese and Korean vehicles. Brake, engine, suspension, electrical and more.",
       content: {
