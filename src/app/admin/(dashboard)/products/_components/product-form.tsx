@@ -24,12 +24,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { ProductDescription } from "@/components/products/product-description";
 
 const formSchema = z.object({
   name: z.string().trim().min(2),
   slug: z.string().optional(),
   sku: z.string().trim().min(2),
-  description: z.string().trim().min(10),
+  description: z.string().min(10, "Description must be at least 10 characters").max(5000),
   richDescription: z.string().optional().nullable(),
   price: z.coerce.number().positive(),
   compareAtPrice: z.coerce.number().positive().optional().nullable(),
@@ -102,6 +103,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   });
 
   const nameValue = form.watch("name");
+  const descriptionValue = form.watch("description") || "";
   const imageUrls = form.watch("imageUrls") || [];
 
   useEffect(() => {
@@ -182,8 +184,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       name: values.name,
       slug: values.slug || slugify(values.name),
       sku: values.sku,
-      description: values.description,
-      richDescription: values.richDescription ?? null,
+      description: values.description.trim(),
+      richDescription: null,
       price: values.price,
       compareAtPrice: values.compareAtPrice ?? null,
       discount: values.discount ?? null,
@@ -346,12 +348,29 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label>Description</Label>
-            <Textarea rows={4} className={inputClass} {...form.register("description")} />
+            <Textarea
+              rows={8}
+              className={inputClass}
+              placeholder="Enter the full product description. Line breaks are shown on the website exactly as typed."
+              {...form.register("description")}
+            />
             {form.formState.errors.description && (
               <p className="text-xs text-primary">
                 {form.formState.errors.description.message}
               </p>
             )}
+            <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+              <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-white/45">
+                Website preview
+              </p>
+              {descriptionValue.trim() ? (
+                <ProductDescription description={descriptionValue} />
+              ) : (
+                <p className="text-sm text-white/35">
+                  Description preview will appear here.
+                </p>
+              )}
+            </div>
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label>Tags (comma separated)</Label>

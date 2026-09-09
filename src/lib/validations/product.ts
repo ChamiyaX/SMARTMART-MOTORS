@@ -19,7 +19,11 @@ const productBaseSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format")
     .optional(),
   sku: z.string().trim().min(2).max(64),
-  description: z.string().trim().min(10, "Description is required").max(5000),
+  description: z
+    .string()
+    .min(10, "Description is required")
+    .max(5000)
+    .transform((value) => value.trim()),
   richDescription: z.string().max(50000).optional().nullable(),
   price: z.coerce.number().positive("Price must be greater than 0"),
   compareAtPrice: z.coerce.number().positive().optional().nullable(),

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 
+import { ProductDescription } from "@/components/products/product-description";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ProductGrid } from "@/components/products/product-grid";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -144,7 +145,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           </div>
 
           <p className="text-sm text-muted-foreground">SKU: {product.sku}</p>
-          <p className="leading-relaxed text-white/80">{product.description}</p>
+          <ProductDescription description={product.description} />
 
           {product.compatibleModels.length ? (
             <div>
