@@ -128,11 +128,20 @@ export default async function ContactPage() {
           <div className="overflow-hidden rounded-xl border border-white/10">
             <iframe
               title="SmartMart Motors location"
-              src={`https://maps.google.com/maps?q=${mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+              src={`https://www.google.com/maps?q=${mapQuery}&hl=en&z=14&output=embed`}
               className="h-64 w-full contrast-125 grayscale invert-[0.9]"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
             />
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block border-t border-white/10 bg-white/[0.03] px-4 py-2.5 text-center text-xs text-muted-foreground transition hover:text-primary"
+            >
+              Open in Google Maps
+            </a>
           </div>
         </div>
 
