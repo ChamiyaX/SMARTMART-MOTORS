@@ -8,11 +8,13 @@ import {
   saveAnalyticsIds,
   saveCompanySettings,
   saveHoursSettings,
+  saveMessagingSettings,
   saveSocialSettings,
 } from "@/lib/actions/settings";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 type SettingsFormProps = {
   company: {
@@ -41,20 +43,76 @@ type SettingsFormProps = {
     googleTagManagerId?: string;
     facebookPixelId?: string;
   };
+  messaging: {
+    enabled: boolean;
+  };
 };
 
-export function SettingsForm({ company, social, hours, analytics }: SettingsFormProps) {
+export function SettingsForm({
+  company,
+  social,
+  hours,
+  analytics,
+  messaging,
+}: SettingsFormProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [companyForm, setCompanyForm] = useState(company);
   const [socialForm, setSocialForm] = useState(social);
   const [hoursForm, setHoursForm] = useState(hours);
   const [analyticsForm, setAnalyticsForm] = useState(analytics);
+  const [messagingForm, setMessagingForm] = useState(messaging);
 
   const fieldClass = "border-white/10 bg-white/[0.04]";
 
   return (
     <div className="space-y-6">
+      <section className="rounded-xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
+        <h2 className="mb-1 text-sm font-medium uppercase tracking-[0.14em] text-white">
+          Messaging
+        </h2>
+        <p className="mb-4 text-sm text-muted-foreground">
+          When off, the Contact page form, WhatsApp buttons, and Contact links are hidden
+          on the public website.
+        </p>
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3">
+          <div>
+            <Label htmlFor="messaging-enabled" className="text-white">
+              Enable messaging
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              Contact form submissions and WhatsApp chat entry points
+            </p>
+          </div>
+          <Switch
+            id="messaging-enabled"
+            checked={messagingForm.enabled}
+            onCheckedChange={(enabled) => setMessagingForm({ enabled })}
+          />
+        </div>
+        <Button
+          className="mt-4"
+          disabled={pending}
+          onClick={() => {
+            startTransition(async () => {
+              const result = await saveMessagingSettings(messagingForm);
+              if (!result.success) {
+                toast.error(result.error);
+                return;
+              }
+              toast.success(
+                messagingForm.enabled
+                  ? "Messaging enabled on site"
+                  : "Messaging disabled on site"
+              );
+              router.refresh();
+            });
+          }}
+        >
+          Save messaging
+        </Button>
+      </section>
+
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
         <h2 className="mb-4 text-sm font-medium uppercase tracking-[0.14em] text-white">
           Company

@@ -19,6 +19,7 @@ export function revalidateCatalogue() {
 export function revalidateSiteContent() {
   revalidatePath("/", "layout");
   revalidatePath("/about");
+  revalidatePath("/contact");
   revalidatePath("/sitemap.xml");
 }
 

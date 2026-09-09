@@ -33,6 +33,15 @@ export type CompanySettings = {
   registration?: string;
 };
 
+export type MessagingSettings = {
+  enabled: boolean;
+};
+
+export async function getMessagingSettings(): Promise<MessagingSettings> {
+  const value = await getSetting<MessagingSettings>("messaging");
+  return { enabled: value?.enabled !== false };
+}
+
 export async function getCompanySettings(): Promise<CompanySettings> {
   const value = await getSetting<CompanySettings>("company");
 

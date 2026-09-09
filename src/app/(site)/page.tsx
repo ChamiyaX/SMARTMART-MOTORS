@@ -6,6 +6,7 @@ import { StatsCounter } from "@/components/home/stats-counter";
 import { WhyUs } from "@/components/home/why-us";
 import { getBrands } from "@/lib/data/brands";
 import { getFeaturedProducts } from "@/lib/data/products";
+import { getMessagingSettings } from "@/lib/data/settings";
 import { parseHomeStats } from "@/lib/home-stats";
 import { prisma } from "@/lib/prisma";
 import { organizationJsonLd, generateSeoMetadata } from "@/lib/seo";
@@ -19,7 +20,7 @@ export const metadata = generateSeoMetadata({
 });
 
 export default async function HomePage() {
-  const [featuredRaw, brandsRaw, homeStatsRecord] = await Promise.all([
+  const [featuredRaw, brandsRaw, homeStatsRecord, messaging] = await Promise.all([
     safeQuery(() => getFeaturedProducts(8), []),
     safeQuery(() => getBrands(), []),
     safeQuery(
@@ -29,6 +30,7 @@ export default async function HomePage() {
         }),
       null
     ),
+    safeQuery(() => getMessagingSettings(), { enabled: true }),
   ]);
 
   const homeStats = parseHomeStats(homeStatsRecord?.content);
@@ -44,7 +46,7 @@ export default async function HomePage() {
           __html: JSON.stringify(organizationJsonLd()),
         }}
       />
-      <Hero />
+      <Hero messagingEnabled={messaging.enabled} />
       <BrandsMarquee brands={brands} />
       <FeaturedProducts products={featured} />
       <WhyUs />
@@ -54,7 +56,7 @@ export default async function HomePage() {
         description={homeStats.description}
         stats={homeStats.items}
       />
-      <CtaBanner />
+      <CtaBanner messagingEnabled={messaging.enabled} />
     </>
   );
 }

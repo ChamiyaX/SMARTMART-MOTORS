@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidateSiteContent } from "@/lib/revalidate";
 import {
   companySettingsSchema,
+  messagingSettingsSchema,
   socialSettingsSchema,
   upsertSettingSchema,
 } from "@/lib/validations/settings";
@@ -103,6 +104,30 @@ export async function saveCompanySettings(input: unknown): Promise<ActionResult>
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to save company",
+    };
+  }
+}
+
+export async function saveMessagingSettings(input: unknown): Promise<ActionResult> {
+  await requireAdminSession(["SUPER_ADMIN", "ADMIN"]);
+  const parsed = messagingSettingsSchema.safeParse(input);
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: parsed.error.errors[0]?.message || "Validation failed",
+    };
+  }
+
+  try {
+    await upsertKey("messaging", parsed.data, "general");
+    revalidatePath("/admin/settings");
+    revalidateSiteContent();
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to save messaging",
     };
   }
 }

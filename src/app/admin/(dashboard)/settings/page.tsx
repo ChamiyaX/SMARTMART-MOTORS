@@ -33,21 +33,28 @@ export default async function SettingsPage() {
     googleTagManagerId: "",
     facebookPixelId: "",
   };
+  let messaging = { enabled: true };
   let dbError: string | null = null;
 
   try {
     const settings = await prisma.setting.findMany({
       where: {
-        key: { in: ["company", "social", "hours", "analytics"] },
+        key: { in: ["company", "social", "hours", "analytics", "messaging"] },
       },
     });
     for (const setting of settings) {
       if (!setting.value || typeof setting.value !== "object") continue;
-      const value = setting.value as Record<string, string>;
-      if (setting.key === "company") company = { ...company, ...value };
-      if (setting.key === "social") social = { ...social, ...value };
-      if (setting.key === "hours") hours = { ...hours, ...value };
-      if (setting.key === "analytics") analytics = { ...analytics, ...value };
+      const value = setting.value as Record<string, unknown>;
+      if (setting.key === "company")
+        company = { ...company, ...(value as typeof company) };
+      if (setting.key === "social") social = { ...social, ...(value as typeof social) };
+      if (setting.key === "hours") hours = { ...hours, ...(value as typeof hours) };
+      if (setting.key === "analytics") {
+        analytics = { ...analytics, ...(value as typeof analytics) };
+      }
+      if (setting.key === "messaging") {
+        messaging = { enabled: value.enabled !== false };
+      }
     }
   } catch {
     dbError = DB_CONNECT_MESSAGE;
@@ -69,6 +76,7 @@ export default async function SettingsPage() {
         social={social}
         hours={hours}
         analytics={analytics}
+        messaging={messaging}
       />
     </div>
   );

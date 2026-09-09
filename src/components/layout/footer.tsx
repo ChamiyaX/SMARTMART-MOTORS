@@ -34,11 +34,16 @@ const quickLinks = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Contact", messagingOnly: true },
   { href: "/faq", label: "FAQ" },
 ];
 
-export function Footer() {
+type FooterProps = {
+  messagingEnabled?: boolean;
+};
+
+export function Footer({ messagingEnabled = true }: FooterProps) {
+  const links = quickLinks.filter((link) => messagingEnabled || !link.messagingOnly);
   return (
     <footer className="mt-24 border-t border-white/10 bg-secondary/80 backdrop-blur-xl">
       <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-3">
@@ -71,7 +76,7 @@ export function Footer() {
             Quick Links
           </h3>
           <ul className="space-y-2">
-            {quickLinks.map((link) => (
+            {links.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}

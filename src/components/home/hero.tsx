@@ -6,7 +6,11 @@ import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/shared/brand-logo";
 
-export function Hero() {
+type HeroProps = {
+  messagingEnabled?: boolean;
+};
+
+export function Hero({ messagingEnabled = true }: HeroProps) {
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden">
       <div className="mesh-bg absolute inset-0" />
@@ -68,12 +72,21 @@ export function Hero() {
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/contact">
-              <Phone className="h-4 w-4" />
-              Contact
-            </Link>
-          </Button>
+          {messagingEnabled ? (
+            <Button asChild size="lg" variant="outline">
+              <Link href="/contact">
+                <Phone className="h-4 w-4" />
+                Contact
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild size="lg" variant="outline">
+              <a href="tel:0775475141">
+                <Phone className="h-4 w-4" />
+                Call us
+              </a>
+            </Button>
+          )}
         </motion.div>
       </div>
     </section>

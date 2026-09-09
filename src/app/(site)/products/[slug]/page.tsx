@@ -15,6 +15,7 @@ import {
   getRelatedProducts,
   incrementProductView,
 } from "@/lib/data/products";
+import { getMessagingSettings } from "@/lib/data/settings";
 import { getWhatsAppLink, SITE_CONFIG } from "@/lib/constants";
 import { formatPrice, resolveMediaUrl } from "@/lib/utils";
 import { breadcrumbJsonLd, generateSeoMetadata, productJsonLd } from "@/lib/seo";
@@ -49,10 +50,10 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   const product = serializeProduct(raw);
   void safeQuery(() => incrementProductView(raw.id), null);
 
-  const relatedRaw = await safeQuery(
-    () => getRelatedProducts(raw.id, raw.categoryId, 4),
-    []
-  );
+  const [relatedRaw, messaging] = await Promise.all([
+    safeQuery(() => getRelatedProducts(raw.id, raw.categoryId, 4), []),
+    safeQuery(() => getMessagingSettings(), { enabled: true }),
+  ]);
   const related = serializeProducts(relatedRaw);
 
   const availability =
@@ -177,31 +178,33 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             </div>
           ) : null}
 
-          <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Button
-              asChild
-              variant="glow"
-              size="lg"
-              className="h-12 w-full min-w-0 whitespace-normal px-4 sm:w-auto sm:whitespace-nowrap sm:px-8"
-            >
-              <a
-                href={getWhatsAppLink(waMessage)}
-                target="_blank"
-                rel="noopener noreferrer"
+          {messaging.enabled ? (
+            <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button
+                asChild
+                variant="glow"
+                size="lg"
+                className="h-12 w-full min-w-0 whitespace-normal px-4 sm:w-auto sm:whitespace-nowrap sm:px-8"
               >
-                <MessageCircle className="h-4 w-4 shrink-0" />
-                Inquire on WhatsApp
-              </a>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="h-12 w-full min-w-0 sm:w-auto"
-            >
-              <Link href="/contact">Contact us</Link>
-            </Button>
-          </div>
+                <a
+                  href={getWhatsAppLink(waMessage)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageCircle className="h-4 w-4 shrink-0" />
+                  Inquire on WhatsApp
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-12 w-full min-w-0 sm:w-auto"
+              >
+                <Link href="/contact">Contact us</Link>
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div>
 

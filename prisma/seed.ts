@@ -733,6 +733,13 @@ async function main() {
 
   const settings = [
     {
+      key: "messaging",
+      group: "general",
+      value: {
+        enabled: true,
+      },
+    },
+    {
       key: "company",
       group: "general",
       value: {

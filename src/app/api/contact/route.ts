@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { getMessagingSettings } from "@/lib/data/settings";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 import { contactSchema } from "@/lib/validations/contact";
@@ -21,6 +22,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Too many requests. Please try again shortly." },
         { status: 429 }
+      );
+    }
+
+    const messaging = await getMessagingSettings();
+    if (!messaging.enabled) {
+      return NextResponse.json(
+        { error: "Messaging is currently disabled." },
+        { status: 403 }
       );
     }
 

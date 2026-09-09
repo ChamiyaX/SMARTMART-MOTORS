@@ -13,14 +13,19 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Contact", messagingOnly: true },
   { href: "/faq", label: "FAQ" },
 ];
 
-export function Navbar() {
+type NavbarProps = {
+  messagingEnabled?: boolean;
+};
+
+export function Navbar({ messagingEnabled = true }: NavbarProps) {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const links = navLinks.filter((link) => messagingEnabled || !link.messagingOnly);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -48,7 +53,7 @@ export function Navbar() {
         />
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {navLinks.map((link) => {
+          {links.map((link) => {
             const active =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
             return (
@@ -73,11 +78,17 @@ export function Navbar() {
               Call
             </a>
           </Button>
-          <Button asChild variant="glow" size="sm">
-            <a href="https://wa.me/94775475141" target="_blank" rel="noopener noreferrer">
-              WhatsApp
-            </a>
-          </Button>
+          {messagingEnabled ? (
+            <Button asChild variant="glow" size="sm">
+              <a
+                href="https://wa.me/94775475141"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp
+              </a>
+            </Button>
+          ) : null}
         </div>
 
         <Button
@@ -100,7 +111,7 @@ export function Navbar() {
             className="overflow-hidden border-t border-white/10 lg:hidden"
           >
             <div className="container space-y-2 py-4 glass-strong">
-              {navLinks.map((link, i) => (
+              {links.map((link, i) => (
                 <motion.div
                   key={link.href}
                   initial={{ opacity: 0, x: -12 }}
@@ -116,21 +127,27 @@ export function Navbar() {
                 </motion.div>
               ))}
               <div className="flex gap-2 pt-2">
-                <Button asChild variant="outline" className="flex-1">
+                <Button
+                  asChild
+                  variant="outline"
+                  className={messagingEnabled ? "flex-1" : "w-full"}
+                >
                   <a href="tel:0775475141">
                     <Phone className="h-4 w-4" />
                     Call
                   </a>
                 </Button>
-                <Button asChild variant="glow" className="flex-1">
-                  <a
-                    href="https://wa.me/94775475141"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    WhatsApp
-                  </a>
-                </Button>
+                {messagingEnabled ? (
+                  <Button asChild variant="glow" className="flex-1">
+                    <a
+                      href="https://wa.me/94775475141"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      WhatsApp
+                    </a>
+                  </Button>
+                ) : null}
               </div>
             </div>
           </motion.div>

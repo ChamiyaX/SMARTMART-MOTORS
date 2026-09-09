@@ -30,6 +30,10 @@ export const companySettingsSchema = z.object({
   registration: z.string().optional(),
 });
 
+export const messagingSettingsSchema = z.object({
+  enabled: z.boolean(),
+});
+
 export const socialSettingsSchema = z.object({
   facebook: z.string().url().or(z.literal("")).optional(),
   instagram: z.string().url().or(z.literal("")).optional(),
@@ -40,4 +44,5 @@ export const socialSettingsSchema = z.object({
 
 export type UpsertSettingInput = z.infer<typeof upsertSettingSchema>;
 export type CompanySettingsInput = z.infer<typeof companySettingsSchema>;
+export type MessagingSettingsInput = z.infer<typeof messagingSettingsSchema>;
 export type SocialSettingsInput = z.infer<typeof socialSettingsSchema>;

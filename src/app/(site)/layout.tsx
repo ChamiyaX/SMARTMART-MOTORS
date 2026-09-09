@@ -1,6 +1,8 @@
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
+import { getMessagingSettings } from "@/lib/data/settings";
+import { safeQuery } from "@/lib/safe";
 
 /**
  * ISR: cache pages briefly, then refresh from Supabase.
@@ -8,13 +10,15 @@ import { WhatsAppButton } from "@/components/layout/whatsapp-button";
  */
 export const revalidate = 60;
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const messaging = await safeQuery(() => getMessagingSettings(), { enabled: true });
+
   return (
     <>
-      <Navbar />
+      <Navbar messagingEnabled={messaging.enabled} />
       <main className="min-h-screen min-w-0 overflow-x-clip">{children}</main>
-      <Footer />
-      <WhatsAppButton />
+      <Footer messagingEnabled={messaging.enabled} />
+      {messaging.enabled ? <WhatsAppButton /> : null}
     </>
   );
 }

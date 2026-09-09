@@ -3,7 +3,11 @@ import { Mail, MapPin, Phone, Clock } from "lucide-react";
 import { ContactForm } from "@/components/contact/contact-form";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { getCompanySettings, getSetting } from "@/lib/data/settings";
+import {
+  getCompanySettings,
+  getMessagingSettings,
+  getSetting,
+} from "@/lib/data/settings";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateSeoMetadata } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
@@ -27,7 +31,7 @@ const dayLabels: Record<string, string> = {
 };
 
 export default async function ContactPage() {
-  const [company, hours] = await Promise.all([
+  const [company, hours, messaging] = await Promise.all([
     safeQuery(() => getCompanySettings(), {
       name: SITE_CONFIG.name,
       tagline: SITE_CONFIG.tagline,
@@ -46,6 +50,7 @@ export default async function ContactPage() {
       sunday: "Closed",
       note: "Island-wide delivery available",
     } as BusinessHours),
+    safeQuery(() => getMessagingSettings(), { enabled: true }),
   ]);
 
   const mapQuery = encodeURIComponent(company.address || SITE_CONFIG.address);
@@ -145,7 +150,14 @@ export default async function ContactPage() {
           </div>
         </div>
 
-        <ContactForm />
+        {messaging.enabled ? (
+          <ContactForm />
+        ) : (
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-6 text-sm text-muted-foreground">
+            Online messaging is currently unavailable. Please call us using the details on
+            the left.
+          </div>
+        )}
       </div>
     </div>
   );
