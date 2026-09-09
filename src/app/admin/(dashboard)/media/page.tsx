@@ -65,7 +65,7 @@ export default async function MediaPage() {
     <div>
       <PageHeader
         title="Media"
-        description="Library of Cloudinary uploads and product imagery."
+        description="Upload and browse product images stored in your media library."
       />
       {dbError && (
         <div className="mb-6 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">

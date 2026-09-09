@@ -402,7 +402,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
               ) : (
                 <Upload className="h-3.5 w-3.5" />
               )}
-              Cloudinary upload
+              Upload image
               <input
                 type="file"
                 accept="image/*"

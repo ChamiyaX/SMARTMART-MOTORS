@@ -308,6 +308,7 @@ model MediaAsset {
   height    Int?
   folder    String?
   alt       String?
+  data      Bytes?
   createdAt DateTime @default(now())
 
   @@index([publicId])

@@ -35,9 +35,9 @@ openssl rand -base64 32
 
 Set as `AUTH_SECRET` (and keep `AUTH_URL` / `NEXTAUTH_URL` = your production URL).
 
-## 3. Image uploads (Cloudinary or Supabase Storage)
+## 3. Image uploads
 
-Admin image uploads need **either** Cloudinary **or** Supabase Storage.
+Admin uploads pick the first configured backend: Cloudinary → Supabase Storage → **Database** (uses existing `DATABASE_URL`).
 
 ### Option A — Cloudinary (recommended for CDN transforms)
 
@@ -65,6 +65,14 @@ SUPABASE_STORAGE_BUCKET=smartmart-media
 ```
 
 Then run `supabase/migrations/002_storage_bucket.sql` in Supabase → SQL Editor to create the public media bucket.
+
+### Option C — Database storage (zero extra keys)
+
+If neither Cloudinary nor `SUPABASE_SERVICE_ROLE_KEY` is set, uploads store images in Postgres and serve them from `/api/files/[id]`. Run once in Supabase → SQL Editor:
+
+`supabase/migrations/003_media_asset_data.sql`
+
+After deploy, check `GET /api/health` — `"upload": { "provider": "database" }` means uploads are ready.
 
 ## 4. Vercel
 

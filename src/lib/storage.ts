@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getSupabaseServiceRoleKey, getSupabaseUrl } from "@/lib/supabase/env";
 
 export type StorageUploadResult = {
   url: string;
@@ -16,9 +17,40 @@ function sanitizeFilename(name: string) {
 }
 
 export function isSupabaseStorageConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-  );
+  return Boolean(getSupabaseUrl() && getSupabaseServiceRoleKey());
+}
+
+async function ensureBucket() {
+  const supabase = createAdminClient();
+  const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+
+  if (listError) {
+    throw new Error(listError.message);
+  }
+
+  if (buckets?.some((bucket) => bucket.id === BUCKET || bucket.name === BUCKET)) {
+    return supabase;
+  }
+
+  const { error: createError } = await supabase.storage.createBucket(BUCKET, {
+    public: true,
+    fileSizeLimit: 10 * 1024 * 1024,
+    allowedMimeTypes: [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+      "image/avif",
+    ],
+  });
+
+  if (createError && !/already exists/i.test(createError.message)) {
+    throw new Error(
+      `Could not create storage bucket "${BUCKET}". Run supabase/migrations/002_storage_bucket.sql in Supabase SQL editor. (${createError.message})`
+    );
+  }
+
+  return supabase;
 }
 
 export async function uploadToSupabaseStorage(
@@ -27,7 +59,7 @@ export async function uploadToSupabaseStorage(
   contentType: string,
   folder = "products"
 ): Promise<StorageUploadResult> {
-  const supabase = createAdminClient();
+  const supabase = await ensureBucket();
   const safeName = sanitizeFilename(filename);
   const path = `${folder}/${Date.now()}-${safeName}`;
 

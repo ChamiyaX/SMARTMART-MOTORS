@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { auth } from "@/lib/auth";
-import { uploadMedia } from "@/lib/upload";
 import { MAX_UPLOAD_SIZE_MB } from "@/lib/constants";
+import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
+import { getUploadProvider, uploadMedia } from "@/lib/upload";
 
 const MAX_BYTES = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
 
@@ -21,6 +22,17 @@ export async function POST(request: NextRequest) {
     });
     if (!limited.success) {
       return NextResponse.json({ error: "Upload rate limit exceeded" }, { status: 429 });
+    }
+
+    const provider = getUploadProvider();
+    if (!provider) {
+      return NextResponse.json(
+        {
+          error:
+            "Image upload is not configured. Set DATABASE_URL on Vercel, or add SUPABASE_SERVICE_ROLE_KEY / Cloudinary keys.",
+        },
+        { status: 503 }
+      );
     }
 
     const formData = await request.formData();
@@ -55,21 +67,38 @@ export async function POST(request: NextRequest) {
     const uploadedUrl =
       "secureUrl" in result && result.secureUrl ? result.secureUrl : result.url;
 
+    if (provider !== "database") {
+      await prisma.mediaAsset.create({
+        data: {
+          url: uploadedUrl,
+          publicId: result.publicId,
+          filename: file.name,
+          mimeType: file.type,
+          size: file.size,
+          width: "width" in result ? (result.width ?? null) : null,
+          height: "height" in result ? (result.height ?? null) : null,
+          folder,
+        },
+      });
+    }
+
     return NextResponse.json({
       url: uploadedUrl,
       publicId: result.publicId,
-      width: result.width,
-      height: result.height,
-      format: result.format,
+      width: "width" in result ? result.width : undefined,
+      height: "height" in result ? result.height : undefined,
+      format: "format" in result ? result.format : undefined,
       bytes: result.bytes,
+      provider,
     });
   } catch (error) {
     console.error("[api/upload]", error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Upload failed",
-      },
-      { status: 500 }
-    );
+
+    const message = error instanceof Error ? error.message : "Upload failed";
+    const hint = /column.*data|Unknown arg.*data/i.test(message)
+      ? " Run supabase/migrations/003_media_asset_data.sql in Supabase SQL editor, then redeploy."
+      : "";
+
+    return NextResponse.json({ error: `${message}${hint}` }, { status: 500 });
   }
 }
