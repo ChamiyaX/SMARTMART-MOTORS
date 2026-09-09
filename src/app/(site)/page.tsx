@@ -9,6 +9,8 @@ import { getBrands } from "@/lib/data/brands";
 import { getCategoryCoverMap, getRootCategories } from "@/lib/data/categories";
 import { resolveCategoryImage } from "@/lib/category-images";
 import { getFeaturedProducts } from "@/lib/data/products";
+import { parseHomeStats } from "@/lib/home-stats";
+import { prisma } from "@/lib/prisma";
 import { organizationJsonLd, generateSeoMetadata } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
 import { serializeBrand, serializeCategory, serializeProducts } from "@/lib/serialize";
@@ -20,11 +22,20 @@ export const metadata = generateSeoMetadata({
 });
 
 export default async function HomePage() {
-  const [featuredRaw, categoriesRaw, brandsRaw] = await Promise.all([
+  const [featuredRaw, categoriesRaw, brandsRaw, homeStatsRecord] = await Promise.all([
     safeQuery(() => getFeaturedProducts(8), []),
     safeQuery(() => getRootCategories(), []),
     safeQuery(() => getBrands(), []),
+    safeQuery(
+      () =>
+        prisma.pageContent.findFirst({
+          where: { page: "home-stats", isPublished: true },
+        }),
+      null
+    ),
   ]);
+
+  const homeStats = parseHomeStats(homeStatsRecord?.content);
 
   const featured = serializeProducts(featuredRaw);
   const coverMap = await safeQuery(
@@ -50,7 +61,12 @@ export default async function HomePage() {
       <CategoriesShowcase categories={categories} />
       <FeaturedProducts products={featured} />
       <WhyUs />
-      <StatsCounter />
+      <StatsCounter
+        eyebrow={homeStats.eyebrow}
+        title={homeStats.title}
+        description={homeStats.description}
+        stats={homeStats.items}
+      />
       <CtaBanner />
     </>
   );

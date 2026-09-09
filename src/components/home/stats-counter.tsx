@@ -18,6 +18,9 @@ interface StatItem {
 }
 
 interface StatsCounterProps {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
   stats?: StatItem[];
   className?: string;
 }
@@ -28,6 +31,12 @@ const defaultStats: StatItem[] = [
   { label: "Brands stocked", value: 60, suffix: "+" },
   { label: "Years of service", value: 8, suffix: "+" },
 ];
+
+const defaultHeading = {
+  eyebrow: "By the numbers",
+  title: "Proven on the road",
+  description: "Figures that reflect a community of drivers who trust SmartMart Motors.",
+};
 
 function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = React.useRef<HTMLSpanElement>(null);
@@ -64,15 +73,17 @@ function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   );
 }
 
-export function StatsCounter({ stats = defaultStats, className }: StatsCounterProps) {
+export function StatsCounter({
+  eyebrow = defaultHeading.eyebrow,
+  title = defaultHeading.title,
+  description = defaultHeading.description,
+  stats = defaultStats,
+  className,
+}: StatsCounterProps) {
   return (
     <section className={cn("border-y border-white/5 bg-white/[0.02] py-20", className)}>
       <div className="container">
-        <SectionHeading
-          eyebrow="By the numbers"
-          title="Proven on the road"
-          description="Figures that reflect a community of drivers who trust SmartMart Motors."
-        />
+        <SectionHeading eyebrow={eyebrow} title={title} description={description} />
 
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map((stat, index) => (

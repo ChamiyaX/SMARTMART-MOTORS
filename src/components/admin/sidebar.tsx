@@ -9,6 +9,7 @@ import {
   ImageIcon,
   LayoutDashboard,
   FileText,
+  Hash,
   Info,
   LogOut,
   Mail,
@@ -36,6 +37,7 @@ const navItems = [
   { href: "/admin/messages", label: "Messages", icon: Mail },
   { href: "/admin/media", label: "Media", icon: ImageIcon },
   { href: "/admin/content", label: "Content", icon: FileText },
+  { href: "/admin/home-stats", label: "Home Stats", icon: Hash },
   { href: "/admin/about", label: "About Page", icon: Info },
   { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },
   {

@@ -878,6 +878,43 @@ async function main() {
   });
 
   await prisma.pageContent.upsert({
+    where: { page: "home-stats" },
+    update: {
+      title: "Home stats",
+      isPublished: true,
+      content: {
+        eyebrow: "By the numbers",
+        title: "Proven on the road",
+        description:
+          "Figures that reflect a community of drivers who trust SmartMart Motors.",
+        items: [
+          { label: "Parts in catalog", value: 2500, suffix: "+" },
+          { label: "Happy customers", value: 1800, suffix: "+" },
+          { label: "Brands stocked", value: 60, suffix: "+" },
+          { label: "Years of service", value: 8, suffix: "+" },
+        ],
+      },
+    },
+    create: {
+      page: "home-stats",
+      title: "Home stats",
+      isPublished: true,
+      content: {
+        eyebrow: "By the numbers",
+        title: "Proven on the road",
+        description:
+          "Figures that reflect a community of drivers who trust SmartMart Motors.",
+        items: [
+          { label: "Parts in catalog", value: 2500, suffix: "+" },
+          { label: "Happy customers", value: 1800, suffix: "+" },
+          { label: "Brands stocked", value: 60, suffix: "+" },
+          { label: "Years of service", value: 8, suffix: "+" },
+        ],
+      },
+    },
+  });
+
+  await prisma.pageContent.upsert({
     where: { page: "about" },
     update: {
       title: "About SmartMart Motors",
@@ -944,7 +981,7 @@ async function main() {
     },
   });
 
-  console.log("✓ Page content (home, about)");
+  console.log("✓ Page content (home, home-stats, about)");
 
   const faqs = [
     {
