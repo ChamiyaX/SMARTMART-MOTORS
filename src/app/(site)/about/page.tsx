@@ -19,7 +19,7 @@ export async function generateMetadata() {
     title: page?.seoTitle || "About Us",
     description:
       page?.seoDescription ||
-      `Learn about ${SITE_CONFIG.name} — premium automotive spare parts for Sri Lankan drivers and workshops.`,
+      `Learn about ${SITE_CONFIG.name} — ${SITE_CONFIG.tagline}`,
     path: "/about",
   });
 }

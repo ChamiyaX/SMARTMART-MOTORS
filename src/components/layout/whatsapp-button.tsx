@@ -4,13 +4,14 @@ import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface WhatsAppButtonProps {
+  href: string;
   className?: string;
 }
 
-export function WhatsAppButton({ className }: WhatsAppButtonProps) {
+export function WhatsAppButton({ href, className }: WhatsAppButtonProps) {
   return (
     <a
-      href="https://wa.me/94775475141"
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

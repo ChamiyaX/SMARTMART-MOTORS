@@ -1,8 +1,11 @@
 import { PageHeader } from "@/components/admin/page-header";
 import { SettingsForm } from "./settings-form";
 import { DB_CONNECT_MESSAGE } from "@/lib/admin";
+import { DEFAULT_BUSINESS_HOURS } from "@/lib/business-hours";
+import { getBusinessHours } from "@/lib/data/settings";
 import { SITE_CONFIG } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
+import { safeQuery } from "@/lib/safe";
 
 export const dynamic = "force-dynamic";
 
@@ -23,39 +26,39 @@ export default async function SettingsPage() {
     tiktok: "",
     linkedin: "",
   };
-  let hours = {
-    weekdays: "Mon–Fri 8:30 AM – 6:00 PM",
-    saturday: "Sat 8:30 AM – 2:00 PM",
-    sunday: "Closed",
-  };
+  let hours = { ...DEFAULT_BUSINESS_HOURS };
   let analytics = {
     googleAnalyticsId: "",
     googleTagManagerId: "",
     facebookPixelId: "",
   };
-  let messaging = { enabled: true };
+  const messaging = { enabled: true, whatsapp: SITE_CONFIG.whatsapp };
   let dbError: string | null = null;
 
   try {
-    const settings = await prisma.setting.findMany({
-      where: {
-        key: { in: ["company", "social", "hours", "analytics", "messaging"] },
-      },
-    });
+    const [settings, businessHours] = await Promise.all([
+      prisma.setting.findMany({
+        where: {
+          key: { in: ["company", "social", "analytics", "messaging"] },
+        },
+      }),
+      safeQuery(() => getBusinessHours(), DEFAULT_BUSINESS_HOURS),
+    ]);
+    hours = businessHours;
     for (const setting of settings) {
       if (!setting.value || typeof setting.value !== "object") continue;
       const value = setting.value as Record<string, unknown>;
       if (setting.key === "company")
         company = { ...company, ...(value as typeof company) };
       if (setting.key === "social") social = { ...social, ...(value as typeof social) };
-      if (setting.key === "hours") hours = { ...hours, ...(value as typeof hours) };
       if (setting.key === "analytics") {
         analytics = { ...analytics, ...(value as typeof analytics) };
       }
       if (setting.key === "messaging") {
-        messaging = { enabled: value.enabled !== false };
+        messaging.enabled = value.enabled !== false;
       }
     }
+    messaging.whatsapp = company.whatsapp;
   } catch {
     dbError = DB_CONNECT_MESSAGE;
   }

@@ -5,12 +5,19 @@ import { motion } from "framer-motion";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/shared/brand-logo";
+import { SITE_CONFIG } from "@/lib/constants";
 
 type HeroProps = {
   messagingEnabled?: boolean;
+  phone?: string;
+  tagline?: string;
 };
 
-export function Hero({ messagingEnabled = true }: HeroProps) {
+export function Hero({
+  messagingEnabled = true,
+  phone = "0775475141",
+  tagline = SITE_CONFIG.tagline,
+}: HeroProps) {
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden">
       <div className="mesh-bg absolute inset-0" />
@@ -48,17 +55,8 @@ export function Hero({ messagingEnabled = true }: HeroProps) {
           transition={{ duration: 0.55, delay: 0.12 }}
           className="max-w-xl font-display text-2xl font-semibold text-white sm:text-3xl"
         >
-          Precision parts. Peak performance.
+          {tagline}
         </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.22 }}
-          className="mt-4 max-w-lg text-base text-white/70 sm:text-lg"
-        >
-          Vehicle imported and delivered across Sri Lanka with trust and speed.
-        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -68,7 +66,7 @@ export function Hero({ messagingEnabled = true }: HeroProps) {
         >
           <Button asChild size="lg" variant="glow">
             <Link href="/products">
-              Shop Parts
+              Products
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -81,7 +79,7 @@ export function Hero({ messagingEnabled = true }: HeroProps) {
             </Button>
           ) : (
             <Button asChild size="lg" variant="outline">
-              <a href="tel:0775475141">
+              <a href={`tel:${phone}`}>
                 <Phone className="h-4 w-4" />
                 Call us
               </a>

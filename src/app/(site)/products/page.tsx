@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { getBrands } from "@/lib/data/brands";
 import { getCategories } from "@/lib/data/categories";
 import { getProducts } from "@/lib/data/products";
-import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
+import { DEFAULT_PAGE_SIZE, SITE_CONFIG } from "@/lib/constants";
 import { generateSeoMetadata } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
 import { serializeBrand, serializeCategory, serializeProducts } from "@/lib/serialize";
@@ -16,8 +16,7 @@ import type { ProductFiltersState } from "@/components/products/product-filters"
 export const metadata = generateSeoMetadata({
   title: "Products",
   path: "/products",
-  description:
-    "Browse premium automotive spare parts — filter by category, brand, and stock status.",
+  description: `Browse electric tricycles and models — ${SITE_CONFIG.tagline}`,
 });
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -96,8 +95,8 @@ export default async function ProductsPage({
       <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Products" }]} />
       <SectionHeading
         eyebrow="Catalog"
-        title="Shop Parts"
-        description="Search and filter our inventory of OEM-grade automotive components."
+        title="Products"
+        description={SITE_CONFIG.tagline}
         align="left"
       />
       <Suspense

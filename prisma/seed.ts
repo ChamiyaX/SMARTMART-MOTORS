@@ -744,7 +744,7 @@ async function main() {
       group: "general",
       value: {
         name: "SmartMart Motors",
-        tagline: "Premium Automotive Spare Parts – Sri Lanka",
+        tagline: "Best Electric Tricycle for Your Needs",
         address: "Colombo, Sri Lanka",
         phone: "0775475141",
         email: "smartmartmotors@gmail.com",
@@ -793,8 +793,7 @@ async function main() {
       value: {
         defaultTitle: "SmartMart Motors",
         titleTemplate: "%s | SmartMart Motors",
-        defaultDescription:
-          "Imported Chinese OEM-quality automotive spare parts for Toyota, Honda, Nissan, Suzuki and more. Colombo-based, island-wide delivery.",
+        defaultDescription: "Best Electric Tricycle for Your Needs",
         ogImage: "/og-default.jpg",
       },
     },
@@ -822,62 +821,60 @@ async function main() {
   await prisma.pageContent.upsert({
     where: { page: "home" },
     update: {
-      title: "SmartMart Motors – Premium Auto Parts",
+      title: "SmartMart Motors – Electric Tricycles",
       isPublished: true,
       seoTitle: "SmartMart Motors",
-      seoDescription:
-        "Shop OEM-quality Chinese imported spare parts for Japanese and Korean vehicles. Brake, engine, suspension, electrical and more.",
+      seoDescription: "Best Electric Tricycle for Your Needs",
       content: {
         hero: {
-          headline: "Precision Parts. Trusted Supply.",
+          headline: "Best Electric Tricycle for Your Needs",
           subheadline:
-            "Genuine imported Chinese OEM components for Sri Lanka’s workshops and vehicle owners.",
-          ctaPrimary: "Browse catalogue",
+            "Quality electric tricycles for daily transport and delivery across Sri Lanka.",
+          ctaPrimary: "Browse models",
           ctaSecondary: "WhatsApp inquiry",
         },
         features: [
           {
-            title: "OEM-grade imports",
-            description: "Direct from certified Chinese manufacturers",
+            title: "Quality models",
+            description: "Reliable electric tricycles for everyday use",
           },
           {
             title: "Fast island delivery",
             description: "Colombo same-day options available",
           },
           {
-            title: "Workshop support",
-            description: "Fitment guidance from specialists",
+            title: "Expert support",
+            description: "Help choosing the right tricycle for you",
           },
         ],
       },
     },
     create: {
       page: "home",
-      title: "SmartMart Motors – Premium Auto Parts",
+      title: "SmartMart Motors – Electric Tricycles",
       isPublished: true,
       seoTitle: "SmartMart Motors",
-      seoDescription:
-        "Shop OEM-quality Chinese imported spare parts for Japanese and Korean vehicles. Brake, engine, suspension, electrical and more.",
+      seoDescription: "Best Electric Tricycle for Your Needs",
       content: {
         hero: {
-          headline: "Precision Parts. Trusted Supply.",
+          headline: "Best Electric Tricycle for Your Needs",
           subheadline:
-            "Genuine imported Chinese OEM components for Sri Lanka’s workshops and vehicle owners.",
-          ctaPrimary: "Browse catalogue",
+            "Quality electric tricycles for daily transport and delivery across Sri Lanka.",
+          ctaPrimary: "Browse models",
           ctaSecondary: "WhatsApp inquiry",
         },
         features: [
           {
-            title: "OEM-grade imports",
-            description: "Direct from certified Chinese manufacturers",
+            title: "Quality models",
+            description: "Reliable electric tricycles for everyday use",
           },
           {
             title: "Fast island delivery",
             description: "Colombo same-day options available",
           },
           {
-            title: "Workshop support",
-            description: "Fitment guidance from specialists",
+            title: "Expert support",
+            description: "Help choosing the right tricycle for you",
           },
         ],
       },
@@ -895,7 +892,7 @@ async function main() {
         description:
           "Figures that reflect a community of drivers who trust SmartMart Motors.",
         items: [
-          { label: "Parts in catalog", value: 2500, suffix: "+" },
+          { label: "Models in catalog", value: 2500, suffix: "+" },
           { label: "Happy customers", value: 1800, suffix: "+" },
           { label: "Brands stocked", value: 60, suffix: "+" },
           { label: "Years of service", value: 8, suffix: "+" },
@@ -912,7 +909,7 @@ async function main() {
         description:
           "Figures that reflect a community of drivers who trust SmartMart Motors.",
         items: [
-          { label: "Parts in catalog", value: 2500, suffix: "+" },
+          { label: "Models in catalog", value: 2500, suffix: "+" },
           { label: "Happy customers", value: 1800, suffix: "+" },
           { label: "Brands stocked", value: 60, suffix: "+" },
           { label: "Years of service", value: 8, suffix: "+" },
@@ -928,28 +925,28 @@ async function main() {
       isPublished: true,
       seoTitle: "About Us | SmartMart Motors Sri Lanka",
       seoDescription:
-        "Learn how SmartMart Motors supplies premium Chinese OEM automotive spare parts across Sri Lanka.",
+        "Learn about SmartMart Motors — Best Electric Tricycle for Your Needs across Sri Lanka.",
       content: {
         headline: "About SmartMart Motors",
-        body: "Premium automotive spare parts trusted by workshops and drivers across Sri Lanka.",
+        body: "Best Electric Tricycle for Your Needs — trusted by riders across Sri Lanka.",
         mission:
-          "To deliver reliable, affordable OEM-quality spare parts so every Sri Lankan vehicle stays on the road longer.",
+          "To deliver reliable, affordable electric tricycles so every customer gets practical transport that fits their daily needs.",
         story:
-          "SmartMart Motors sources directly from certified Chinese manufacturers producing parts to Japanese and Korean OEM specifications. We serve retail customers, garages, and fleet operators island-wide.",
+          "SmartMart Motors helps individuals and businesses find quality electric tricycles for delivery, commuting, and commercial use island-wide.",
         imageUrl:
           "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=80",
         values: [
           {
             title: "Quality first",
-            text: "We stock Chinese OEM-grade parts selected for fitment accuracy and durability.",
+            text: "We focus on dependable electric tricycles selected for safety and durability.",
           },
           {
             title: "Honest guidance",
-            text: "Tell us your vehicle — we'll help you match the right component the first time.",
+            text: "Tell us how you ride — we'll help you pick the right tricycle the first time.",
           },
           {
             title: "Island-wide reach",
-            text: "From Colombo to every district, we ship parts where you need them.",
+            text: "From Colombo to every district, we deliver where you need them.",
           },
         ],
       },
@@ -960,28 +957,28 @@ async function main() {
       isPublished: true,
       seoTitle: "About Us | SmartMart Motors Sri Lanka",
       seoDescription:
-        "Learn how SmartMart Motors supplies premium Chinese OEM automotive spare parts across Sri Lanka.",
+        "Learn about SmartMart Motors — Best Electric Tricycle for Your Needs across Sri Lanka.",
       content: {
         headline: "About SmartMart Motors",
-        body: "Premium automotive spare parts trusted by workshops and drivers across Sri Lanka.",
+        body: "Best Electric Tricycle for Your Needs — trusted by riders across Sri Lanka.",
         mission:
-          "To deliver reliable, affordable OEM-quality spare parts so every Sri Lankan vehicle stays on the road longer.",
+          "To deliver reliable, affordable electric tricycles so every customer gets practical transport that fits their daily needs.",
         story:
-          "SmartMart Motors sources directly from certified Chinese manufacturers producing parts to Japanese and Korean OEM specifications. We serve retail customers, garages, and fleet operators island-wide.",
+          "SmartMart Motors helps individuals and businesses find quality electric tricycles for delivery, commuting, and commercial use island-wide.",
         imageUrl:
           "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=80",
         values: [
           {
             title: "Quality first",
-            text: "We stock Chinese OEM-grade parts selected for fitment accuracy and durability.",
+            text: "We focus on dependable electric tricycles selected for safety and durability.",
           },
           {
             title: "Honest guidance",
-            text: "Tell us your vehicle — we'll help you match the right component the first time.",
+            text: "Tell us how you ride — we'll help you pick the right tricycle the first time.",
           },
           {
             title: "Island-wide reach",
-            text: "From Colombo to every district, we ship parts where you need them.",
+            text: "From Colombo to every district, we deliver where you need them.",
           },
         ],
       },

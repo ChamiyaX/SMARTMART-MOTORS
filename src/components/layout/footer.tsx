@@ -1,9 +1,12 @@
+import type { ComponentType } from "react";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { DeveloperCreditBar } from "@/components/layout/developer-credit-bar";
+import { SITE_CONFIG } from "@/lib/constants";
+import type { SocialSettings } from "@/lib/data/settings";
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -30,6 +33,30 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M16.5 3h-2.2c.2 1.4 1 2.6 2.2 3.3V3zm2.2 3.4c-1.4-.1-2.7-.7-3.7-1.6v8.2c0 3.2-2.6 5.8-5.8 5.8S3.4 16.2 3.4 13s2.6-5.8 5.8-5.8c.3 0 .7 0 1 .1v2.3a3.5 3.5 0 0 0-1-.2 3.5 3.5 0 1 0 3.5 3.5V3.4h2.2c.2 1.2 1 2.2 2 2.8V6.4z" />
+    </svg>
+  );
+}
+
+function YouTubeIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18 5 12 5 12 5s-6 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8C2 9 2 12 2 12s0 3 .4 4.8a2.5 2.5 0 0 0 1.8 1.8C6 19 12 19 12 19s6 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.8.4-4.8.4-4.8s0-3-.4-4.8zM10 15.5V8.5l6 3.5-6 3.5z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M6.5 8.5h3v11h-3v-11zm1.5-4.5c1 0 1.8.8 1.8 1.8S9 7.6 8 7.6 6.2 6.8 6.2 5.8 7 4 7.5 4zm4 4.5h2.9v1.5h.1c.4-.8 1.5-1.7 3.1-1.7 3.3 0 3.9 2.2 3.9 5v5.2h-3v-4.6c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4v4.7h-3v-11z" />
+    </svg>
+  );
+}
+
 const quickLinks = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
@@ -38,37 +65,74 @@ const quickLinks = [
   { href: "/faq", label: "FAQ" },
 ];
 
+const socialIconClass =
+  "rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary hover:shadow-glow";
+
 type FooterProps = {
   messagingEnabled?: boolean;
+  social?: SocialSettings;
 };
 
-export function Footer({ messagingEnabled = true }: FooterProps) {
+function buildSocialLinks(social: SocialSettings | undefined) {
+  if (!social) return [];
+
+  const entries: {
+    href: string;
+    label: string;
+    Icon: ComponentType<{ className?: string }>;
+  }[] = [];
+
+  if (social.facebook?.trim()) {
+    entries.push({ href: social.facebook.trim(), label: "Facebook", Icon: FacebookIcon });
+  }
+  if (social.instagram?.trim()) {
+    entries.push({
+      href: social.instagram.trim(),
+      label: "Instagram",
+      Icon: InstagramIcon,
+    });
+  }
+  if (social.youtube?.trim()) {
+    entries.push({ href: social.youtube.trim(), label: "YouTube", Icon: YouTubeIcon });
+  }
+  if (social.tiktok?.trim()) {
+    entries.push({ href: social.tiktok.trim(), label: "TikTok", Icon: TikTokIcon });
+  }
+  if (social.linkedin?.trim()) {
+    entries.push({ href: social.linkedin.trim(), label: "LinkedIn", Icon: LinkedInIcon });
+  }
+
+  return entries;
+}
+
+export function Footer({ messagingEnabled = true, social }: FooterProps) {
   const links = quickLinks.filter((link) => messagingEnabled || !link.messagingOnly);
+  const socialLinks = buildSocialLinks(social);
+
   return (
     <footer className="mt-24 border-t border-white/10 bg-secondary/80 backdrop-blur-xl">
       <div className="container grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-4">
           <BrandLogo height={48} className="max-w-[220px]" />
           <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Premium automotive parts and accessories — performance you can trust, crafted
-            for Sri Lankan roads.
+            {SITE_CONFIG.tagline} — quality electric tricycles for Sri Lanka.
           </p>
-          <div className="flex gap-3">
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary hover:shadow-glow"
-            >
-              <FacebookIcon className="h-4 w-4" />
-            </a>
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="rounded-md border border-white/10 p-2 text-muted-foreground transition hover:border-primary/50 hover:text-primary hover:shadow-glow"
-            >
-              <InstagramIcon className="h-4 w-4" />
-            </a>
-          </div>
+          {socialLinks.length ? (
+            <div className="flex flex-wrap gap-3">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className={socialIconClass}
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div>

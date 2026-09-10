@@ -26,7 +26,7 @@ interface StatsCounterProps {
 }
 
 const defaultStats: StatItem[] = [
-  { label: "Parts in catalog", value: 2500, suffix: "+" },
+  { label: "Models in catalog", value: 2500, suffix: "+" },
   { label: "Happy customers", value: 1800, suffix: "+" },
   { label: "Brands stocked", value: 60, suffix: "+" },
   { label: "Years of service", value: 8, suffix: "+" },

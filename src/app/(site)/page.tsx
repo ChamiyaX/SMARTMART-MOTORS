@@ -6,7 +6,8 @@ import { StatsCounter } from "@/components/home/stats-counter";
 import { WhyUs } from "@/components/home/why-us";
 import { getBrands } from "@/lib/data/brands";
 import { getFeaturedProducts } from "@/lib/data/products";
-import { getMessagingSettings } from "@/lib/data/settings";
+import { buildWhatsAppLink, SITE_CONFIG } from "@/lib/constants";
+import { getCompanySettings, getMessagingSettings } from "@/lib/data/settings";
 import { parseHomeStats } from "@/lib/home-stats";
 import { prisma } from "@/lib/prisma";
 import { organizationJsonLd, generateSeoMetadata } from "@/lib/seo";
@@ -15,12 +16,11 @@ import { serializeBrand, serializeProducts } from "@/lib/serialize";
 
 export const metadata = generateSeoMetadata({
   path: "/",
-  description:
-    "Premium Chinese OEM automotive spare parts for Toyota, Honda, Nissan, Suzuki and more. Colombo-based with island-wide delivery.",
+  description: SITE_CONFIG.tagline,
 });
 
 export default async function HomePage() {
-  const [featuredRaw, brandsRaw, homeStatsRecord, messaging] = await Promise.all([
+  const [featuredRaw, brandsRaw, homeStatsRecord, messaging, company] = await Promise.all([
     safeQuery(() => getFeaturedProducts(8), []),
     safeQuery(() => getBrands(), []),
     safeQuery(
@@ -31,7 +31,16 @@ export default async function HomePage() {
       null
     ),
     safeQuery(() => getMessagingSettings(), { enabled: true }),
+    safeQuery(() => getCompanySettings(), {
+      name: SITE_CONFIG.name,
+      tagline: SITE_CONFIG.tagline,
+      phone: SITE_CONFIG.phone,
+      email: SITE_CONFIG.email,
+      whatsapp: SITE_CONFIG.whatsapp,
+    }),
   ]);
+
+  const whatsappLink = buildWhatsAppLink(company.whatsapp);
 
   const homeStats = parseHomeStats(homeStatsRecord?.content);
 
@@ -46,9 +55,16 @@ export default async function HomePage() {
           __html: JSON.stringify(organizationJsonLd()),
         }}
       />
-      <Hero messagingEnabled={messaging.enabled} />
+      <Hero
+        messagingEnabled={messaging.enabled}
+        phone={company.phone}
+        tagline={company.tagline || SITE_CONFIG.tagline}
+      />
       <BrandsMarquee brands={brands} />
-      <FeaturedProducts products={featured} />
+      <FeaturedProducts
+        products={featured}
+        tagline={company.tagline || SITE_CONFIG.tagline}
+      />
       <WhyUs />
       <StatsCounter
         eyebrow={homeStats.eyebrow}
@@ -56,7 +72,7 @@ export default async function HomePage() {
         description={homeStats.description}
         stats={homeStats.items}
       />
-      <CtaBanner messagingEnabled={messaging.enabled} />
+      <CtaBanner messagingEnabled={messaging.enabled} whatsappLink={whatsappLink} />
     </>
   );
 }

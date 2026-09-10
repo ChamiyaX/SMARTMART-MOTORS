@@ -14,7 +14,7 @@ import { serializeCategory } from "@/lib/serialize";
 export const metadata = generateSeoMetadata({
   title: "Categories",
   path: "/categories",
-  description: "Browse automotive spare parts by category.",
+  description: "Browse electric tricycles and models by category.",
 });
 
 export default async function CategoriesPage() {
@@ -34,7 +34,7 @@ export default async function CategoriesPage() {
       <SectionHeading
         eyebrow="Browse"
         title="Categories"
-        description="Find parts organized the way workshops and enthusiasts shop."
+        description="Find models organized for easy browsing and comparison."
         align="left"
       />
 

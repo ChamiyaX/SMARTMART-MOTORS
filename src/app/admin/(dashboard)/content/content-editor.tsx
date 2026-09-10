@@ -29,8 +29,8 @@ export function ContentEditor({ home }: { home: PageRecord }) {
       ? JSON.stringify(home.content, null, 2)
       : JSON.stringify(
           {
-            heroHeadline: "Premium Automotive Spare Parts",
-            heroSubcopy: "Imported quality for Sri Lankan workshops",
+            heroHeadline: "Best Electric Tricycle for Your Needs",
+            heroSubcopy: "Best Electric Tricycle for Your Needs",
           },
           null,
           2

@@ -1,12 +1,13 @@
 import { ShieldCheck, Truck, Wrench, Headset } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { FadeIn } from "@/components/shared/fade-in";
+import { SITE_CONFIG } from "@/lib/constants";
 
 const signals = [
   {
     icon: ShieldCheck,
     title: "Genuine quality",
-    text: "Sourced parts you can fit with confidence.",
+    text: "Tricycles built for reliability and everyday use.",
   },
   {
     icon: Truck,
@@ -16,7 +17,7 @@ const signals = [
   {
     icon: Wrench,
     title: "Expert guidance",
-    text: "Advice that matches your vehicle and build.",
+    text: "Guidance to help you choose the right model.",
   },
   {
     icon: Headset,
@@ -32,7 +33,7 @@ export function WhyUs() {
         <SectionHeading
           eyebrow="Why SmartMart"
           title="Built on Trust"
-          description="A cleaner standard for automotive retail — clarity, quality, and care."
+          description={`${SITE_CONFIG.tagline} — clarity, quality, and care.`}
         />
       </FadeIn>
 

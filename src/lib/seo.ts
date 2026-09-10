@@ -24,9 +24,7 @@ export function generateSeoMetadata({
     ? `${title} | ${SITE_CONFIG.name}`
     : `${SITE_CONFIG.name} | ${SITE_CONFIG.tagline}`;
 
-  const pageDescription =
-    description ||
-    "Premium Chinese OEM automotive spare parts for Toyota, Honda, Nissan, Suzuki and more across Sri Lanka.";
+  const pageDescription = description || SITE_CONFIG.tagline;
 
   const url = absoluteUrl(path);
   const ogImage = image || absoluteUrl("/og-default.jpg");
@@ -37,10 +35,10 @@ export function generateSeoMetadata({
     keywords: keywords.length
       ? keywords
       : [
-          "auto spare parts Sri Lanka",
-          "OEM car parts",
+          "electric tricycle Sri Lanka",
           "SmartMart Motors",
-          "Chinese OEM parts",
+          "electric tricycle for your needs",
+          "e-tricycle Colombo",
         ],
     alternates: {
       canonical: url,

@@ -1,7 +1,8 @@
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
-import { getMessagingSettings } from "@/lib/data/settings";
+import { buildWhatsAppLink, SITE_CONFIG } from "@/lib/constants";
+import { getCompanySettings, getMessagingSettings, getSocialSettings } from "@/lib/data/settings";
 import { safeQuery } from "@/lib/safe";
 
 /**
@@ -11,14 +12,29 @@ import { safeQuery } from "@/lib/safe";
 export const revalidate = 60;
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const messaging = await safeQuery(() => getMessagingSettings(), { enabled: true });
+  const [messaging, social, company] = await Promise.all([
+    safeQuery(() => getMessagingSettings(), { enabled: true }),
+    safeQuery(() => getSocialSettings(), {}),
+    safeQuery(() => getCompanySettings(), {
+      name: SITE_CONFIG.name,
+      phone: SITE_CONFIG.phone,
+      email: SITE_CONFIG.email,
+      whatsapp: SITE_CONFIG.whatsapp,
+    }),
+  ]);
+
+  const whatsappLink = buildWhatsAppLink(company.whatsapp);
 
   return (
     <>
-      <Navbar messagingEnabled={messaging.enabled} />
+      <Navbar
+        messagingEnabled={messaging.enabled}
+        phone={company.phone}
+        whatsappLink={whatsappLink}
+      />
       <main className="min-h-screen min-w-0 overflow-x-clip">{children}</main>
-      <Footer messagingEnabled={messaging.enabled} />
-      {messaging.enabled ? <WhatsAppButton /> : null}
+      <Footer messagingEnabled={messaging.enabled} social={social} />
+      {messaging.enabled ? <WhatsAppButton href={whatsappLink} /> : null}
     </>
   );
 }

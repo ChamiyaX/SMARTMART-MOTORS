@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button";
 
 type CtaBannerProps = {
   messagingEnabled?: boolean;
+  whatsappLink?: string;
 };
 
-export function CtaBanner({ messagingEnabled = true }: CtaBannerProps) {
+export function CtaBanner({
+  messagingEnabled = true,
+  whatsappLink = "https://wa.me/94775475141",
+}: CtaBannerProps) {
   return (
     <section className="container py-16">
       <FadeIn>
@@ -14,11 +18,11 @@ export function CtaBanner({ messagingEnabled = true }: CtaBannerProps) {
           <div className="mesh-bg pointer-events-none absolute inset-0 opacity-60" />
           <div className="relative z-10 mx-auto max-w-2xl space-y-4">
             <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
-              Ready to upgrade your ride?
+              Ready for your electric tricycle?
             </h2>
             <p className="text-muted-foreground">
-              Browse premium parts or talk to our team — we&apos;ll help you get the right
-              fit the first time.
+              Browse our models or talk to our team — we&apos;ll help you choose the right
+              tricycle for your needs.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Button asChild variant="glow" size="lg">
@@ -27,7 +31,7 @@ export function CtaBanner({ messagingEnabled = true }: CtaBannerProps) {
               {messagingEnabled ? (
                 <Button asChild variant="outline" size="lg">
                   <a
-                    href="https://wa.me/94775475141"
+                    href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

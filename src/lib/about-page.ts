@@ -18,15 +18,15 @@ export const DEFAULT_ABOUT_IMAGE =
 export const DEFAULT_ABOUT_VALUES: AboutValue[] = [
   {
     title: "Quality first",
-    text: "We stock Chinese OEM-grade parts selected for fitment accuracy and durability.",
+    text: "We focus on dependable electric tricycles selected for safety and durability.",
   },
   {
     title: "Honest guidance",
-    text: "Tell us your vehicle — we'll help you match the right component the first time.",
+    text: "Tell us how you ride — we'll help you pick the right tricycle the first time.",
   },
   {
     title: "Island-wide reach",
-    text: "From Colombo to every district, we ship parts where you need them.",
+    text: "From Colombo to every district, we deliver where you need them.",
   },
 ];
 
@@ -68,15 +68,15 @@ export function parseAboutContent(
     headline: String(record.headline || pageTitle || "About SmartMart Motors"),
     body: String(
       record.body ||
-        "Premium automotive spare parts trusted by workshops and drivers across Sri Lanka."
+        "Best Electric Tricycle for Your Needs — trusted by riders across Sri Lanka."
     ),
     mission: String(
       record.mission ||
-        "We started with a simple idea: make reliable OEM-quality parts easier to find, price, and fit — without the noise of overhyped retail."
+        "We started with a simple idea: make quality electric tricycles easier to find, compare, and buy — without the noise of overhyped retail."
     ),
     story: String(
       record.story ||
-        "Based in Sri Lanka, we serve retail customers, garages, and fleet operators with curated inventory spanning engine, braking, suspension, lighting, and electrical categories."
+        "Based in Sri Lanka, we serve individuals and businesses looking for practical, efficient electric tricycles for daily transport and delivery."
     ),
     imageUrl: String(record.imageUrl || DEFAULT_ABOUT_IMAGE),
     values,

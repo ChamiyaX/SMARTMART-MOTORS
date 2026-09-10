@@ -15,6 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  BUSINESS_HOUR_DAYS,
+  BUSINESS_HOUR_LABELS,
+  type BusinessHours,
+} from "@/lib/business-hours";
 
 type SettingsFormProps = {
   company: {
@@ -33,11 +38,7 @@ type SettingsFormProps = {
     tiktok?: string;
     linkedin?: string;
   };
-  hours: {
-    weekdays?: string;
-    saturday?: string;
-    sunday?: string;
-  };
+  hours: BusinessHours;
   analytics: {
     googleAnalyticsId?: string;
     googleTagManagerId?: string;
@@ -45,6 +46,7 @@ type SettingsFormProps = {
   };
   messaging: {
     enabled: boolean;
+    whatsapp: string;
   };
 };
 
@@ -87,8 +89,26 @@ export function SettingsForm({
           <Switch
             id="messaging-enabled"
             checked={messagingForm.enabled}
-            onCheckedChange={(enabled) => setMessagingForm({ enabled })}
+            onCheckedChange={(enabled) =>
+              setMessagingForm((f) => ({ ...f, enabled }))
+            }
           />
+        </div>
+        <div className="mt-4 space-y-1.5">
+          <Label htmlFor="whatsapp-number">WhatsApp button number</Label>
+          <Input
+            id="whatsapp-number"
+            className={fieldClass}
+            placeholder="94775475141"
+            value={messagingForm.whatsapp}
+            onChange={(e) =>
+              setMessagingForm((f) => ({ ...f, whatsapp: e.target.value }))
+            }
+          />
+          <p className="text-xs text-muted-foreground">
+            Country code with digits only (no + or spaces). Used for the floating
+            WhatsApp button, navbar, and product inquiry links.
+          </p>
         </div>
         <Button
           className="mt-4"
@@ -162,26 +182,33 @@ export function SettingsForm({
       </section>
 
       <section className="rounded-xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl">
-        <h2 className="mb-4 text-sm font-medium uppercase tracking-[0.14em] text-white">
+        <h2 className="mb-1 text-sm font-medium uppercase tracking-[0.14em] text-white">
           Business hours
         </h2>
-        <div className="grid gap-3 md:grid-cols-3">
-          {(
-            [
-              ["weekdays", "Weekdays"],
-              ["saturday", "Saturday"],
-              ["sunday", "Sunday"],
-            ] as const
-          ).map(([key, label]) => (
-            <div key={key} className="space-y-1.5">
-              <Label>{label}</Label>
+        <p className="mb-4 text-sm text-muted-foreground">
+          Shown on the Contact page (Monday through Sunday).
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {BUSINESS_HOUR_DAYS.map((day) => (
+            <div key={day} className="space-y-1.5">
+              <Label>{BUSINESS_HOUR_LABELS[day]}</Label>
               <Input
                 className={fieldClass}
-                value={hoursForm[key] || ""}
-                onChange={(e) => setHoursForm((f) => ({ ...f, [key]: e.target.value }))}
+                placeholder={day === "sunday" ? "Closed" : "08:30 – 18:00"}
+                value={hoursForm[day] || ""}
+                onChange={(e) => setHoursForm((f) => ({ ...f, [day]: e.target.value }))}
               />
             </div>
           ))}
+          <div className="space-y-1.5 sm:col-span-2 lg:col-span-3">
+            <Label>Note (optional)</Label>
+            <Input
+              className={fieldClass}
+              placeholder="Island-wide delivery available"
+              value={hoursForm.note || ""}
+              onChange={(e) => setHoursForm((f) => ({ ...f, note: e.target.value }))}
+            />
+          </div>
         </div>
         <Button
           className="mt-4"

@@ -22,7 +22,7 @@ export default function PrivacyPage() {
           <h2 className="font-display text-lg font-semibold text-white">Who we are</h2>
           <p>
             {SITE_CONFIG.name} (&quot;we&quot;, &quot;us&quot;) operates {SITE_CONFIG.url}
-            . We sell automotive spare parts and related services in Sri Lanka. Contact:{" "}
+            . We sell electric tricycles and related services in Sri Lanka. Contact:{" "}
             {SITE_CONFIG.email}.
           </p>
         </section>

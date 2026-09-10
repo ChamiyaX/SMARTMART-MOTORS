@@ -8,11 +8,14 @@ import { requireAdminSession } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import { revalidateSiteContent } from "@/lib/revalidate";
 import {
+  businessHoursSchema,
   companySettingsSchema,
   messagingSettingsSchema,
   socialSettingsSchema,
   upsertSettingSchema,
 } from "@/lib/validations/settings";
+import { normalizeBusinessHours } from "@/lib/business-hours";
+import { getCompanySettings } from "@/lib/data/settings";
 
 export type ActionResult = {
   success: boolean;
@@ -24,12 +27,6 @@ const seoSettingsSchema = z.object({
   defaultMetaDescription: z.string().max(320).optional(),
   ogImage: z.string().url().or(z.literal("")).optional(),
   siteName: z.string().max(120).optional(),
-});
-
-const hoursSchema = z.object({
-  weekdays: z.string().optional(),
-  saturday: z.string().optional(),
-  sunday: z.string().optional(),
 });
 
 const analyticsIdsSchema = z.object({
@@ -120,7 +117,17 @@ export async function saveMessagingSettings(input: unknown): Promise<ActionResul
   }
 
   try {
-    await upsertKey("messaging", parsed.data, "general");
+    await upsertKey("messaging", { enabled: parsed.data.enabled }, "general");
+
+    if (parsed.data.whatsapp?.trim()) {
+      const company = await getCompanySettings();
+      await upsertKey(
+        "company",
+        { ...company, whatsapp: parsed.data.whatsapp.trim() },
+        "company"
+      );
+    }
+
     revalidatePath("/admin/settings");
     revalidateSiteContent();
     return { success: true };
@@ -158,14 +165,18 @@ export async function saveSocialSettings(input: unknown): Promise<ActionResult> 
 
 export async function saveHoursSettings(input: unknown): Promise<ActionResult> {
   await requireAdminSession(["SUPER_ADMIN", "ADMIN"]);
-  const parsed = hoursSchema.safeParse(input);
+  const parsed = businessHoursSchema.safeParse(input);
 
   if (!parsed.success) {
-    return { success: false, error: "Invalid hours" };
+    return {
+      success: false,
+      error: parsed.error.errors[0]?.message || "Invalid hours",
+    };
   }
 
   try {
-    await upsertKey("hours", parsed.data, "company");
+    const value = normalizeBusinessHours(parsed.data);
+    await upsertKey("business_hours", value, "general");
     revalidatePath("/admin/settings");
     revalidateSiteContent();
     return { success: true };

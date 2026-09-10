@@ -3,7 +3,7 @@ const sanitizePhone = (phone: string) => phone.replace(/[^\d+]/g, "");
 export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "SmartMart Motors";
 
 export const SITE_TAGLINE =
-  process.env.NEXT_PUBLIC_SITE_TAGLINE || "Premium Automotive Spare Parts – Sri Lanka";
+  process.env.NEXT_PUBLIC_SITE_TAGLINE || "Best Electric Tricycle for Your Needs";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
@@ -17,11 +17,15 @@ export const SITE_WHATSAPP = process.env.NEXT_PUBLIC_SITE_WHATSAPP || "947754751
 
 export const SITE_ADDRESS = process.env.NEXT_PUBLIC_SITE_ADDRESS || "Colombo, Sri Lanka";
 
-export function getWhatsAppLink(message?: string): string {
-  const phone = sanitizePhone(SITE_WHATSAPP);
-  const base = `https://wa.me/${phone}`;
+export function buildWhatsAppLink(phone: string, message?: string): string {
+  const digits = sanitizePhone(phone).replace(/^\+/, "");
+  const base = `https://wa.me/${digits}`;
   if (!message) return base;
   return `${base}?text=${encodeURIComponent(message)}`;
+}
+
+export function getWhatsAppLink(message?: string): string {
+  return buildWhatsAppLink(SITE_WHATSAPP, message);
 }
 
 export const SITE_CONFIG = {

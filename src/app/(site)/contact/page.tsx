@@ -4,9 +4,14 @@ import { ContactForm } from "@/components/contact/contact-form";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { SectionHeading } from "@/components/shared/section-heading";
 import {
+  BUSINESS_HOUR_DAYS,
+  BUSINESS_HOUR_LABELS,
+  DEFAULT_BUSINESS_HOURS,
+} from "@/lib/business-hours";
+import {
+  getBusinessHours,
   getCompanySettings,
   getMessagingSettings,
-  getSetting,
 } from "@/lib/data/settings";
 import { SITE_CONFIG } from "@/lib/constants";
 import { generateSeoMetadata } from "@/lib/seo";
@@ -18,18 +23,6 @@ export const metadata = generateSeoMetadata({
   description: `Get in touch with ${SITE_CONFIG.name} for parts inquiries, wholesale, and support.`,
 });
 
-type BusinessHours = Record<string, string>;
-
-const dayLabels: Record<string, string> = {
-  monday: "Monday",
-  tuesday: "Tuesday",
-  wednesday: "Wednesday",
-  thursday: "Thursday",
-  friday: "Friday",
-  saturday: "Saturday",
-  sunday: "Sunday",
-};
-
 export default async function ContactPage() {
   const [company, hours, messaging] = await Promise.all([
     safeQuery(() => getCompanySettings(), {
@@ -40,23 +33,12 @@ export default async function ContactPage() {
       email: SITE_CONFIG.email,
       whatsapp: SITE_CONFIG.whatsapp,
     }),
-    safeQuery(() => getSetting<BusinessHours>("business_hours"), {
-      monday: "08:30 – 18:00",
-      tuesday: "08:30 – 18:00",
-      wednesday: "08:30 – 18:00",
-      thursday: "08:30 – 18:00",
-      friday: "08:30 – 18:00",
-      saturday: "08:30 – 16:00",
-      sunday: "Closed",
-      note: "Island-wide delivery available",
-    } as BusinessHours),
+    safeQuery(() => getBusinessHours(), DEFAULT_BUSINESS_HOURS),
     safeQuery(() => getMessagingSettings(), { enabled: true }),
   ]);
 
   const mapQuery = encodeURIComponent(company.address || SITE_CONFIG.address);
-  const hourEntries = Object.entries(hours || {}).filter(
-    ([key]) => key !== "note" && dayLabels[key]
-  );
+  const hourEntries = BUSINESS_HOUR_DAYS.map((day) => [day, hours?.[day] ?? ""] as const);
 
   return (
     <div className="container pb-20 pt-28">
@@ -120,7 +102,7 @@ export default async function ContactPage() {
             <ul className="space-y-2 text-sm">
               {hourEntries.map(([day, time]) => (
                 <li key={day} className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{dayLabels[day]}</span>
+                  <span className="text-muted-foreground">{BUSINESS_HOUR_LABELS[day]}</span>
                   <span className="text-white">{time}</span>
                 </li>
               ))}

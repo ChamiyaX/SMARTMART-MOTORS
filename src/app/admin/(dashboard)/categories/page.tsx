@@ -17,7 +17,7 @@ export default async function CategoriesPage() {
 
   return (
     <div>
-      <PageHeader title="Categories" description="Organize the spare parts taxonomy." />
+      <PageHeader title="Categories" description="Organize product categories for your catalog." />
       {dbError && (
         <div className="mb-6 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
           {dbError}

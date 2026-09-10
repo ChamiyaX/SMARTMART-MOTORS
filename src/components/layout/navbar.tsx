@@ -19,9 +19,15 @@ const navLinks = [
 
 type NavbarProps = {
   messagingEnabled?: boolean;
+  phone?: string;
+  whatsappLink?: string;
 };
 
-export function Navbar({ messagingEnabled = true }: NavbarProps) {
+export function Navbar({
+  messagingEnabled = true,
+  phone = "0775475141",
+  whatsappLink = "https://wa.me/94775475141",
+}: NavbarProps) {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
@@ -73,7 +79,7 @@ export function Navbar({ messagingEnabled = true }: NavbarProps) {
 
         <div className="hidden items-center gap-2 lg:flex">
           <Button asChild variant="outline" size="sm">
-            <a href="tel:0775475141">
+            <a href={`tel:${phone}`}>
               <Phone className="h-4 w-4" />
               Call
             </a>
@@ -81,7 +87,7 @@ export function Navbar({ messagingEnabled = true }: NavbarProps) {
           {messagingEnabled ? (
             <Button asChild variant="glow" size="sm">
               <a
-                href="https://wa.me/94775475141"
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -132,7 +138,7 @@ export function Navbar({ messagingEnabled = true }: NavbarProps) {
                   variant="outline"
                   className={messagingEnabled ? "flex-1" : "w-full"}
                 >
-                  <a href="tel:0775475141">
+                  <a href={`tel:${phone}`}>
                     <Phone className="h-4 w-4" />
                     Call
                   </a>
@@ -140,7 +146,7 @@ export function Navbar({ messagingEnabled = true }: NavbarProps) {
                 {messagingEnabled ? (
                   <Button asChild variant="glow" className="flex-1">
                     <a
-                      href="https://wa.me/94775475141"
+                      href={whatsappLink}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

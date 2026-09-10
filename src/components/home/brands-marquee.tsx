@@ -27,7 +27,7 @@ export function BrandsMarquee({ brands, className }: BrandsMarqueeProps) {
         <SectionHeading
           eyebrow="Trusted"
           title="Brands We Carry"
-          description="OEM-grade and performance labels stocked for serious builds."
+          description="Trusted brands for electric tricycles across Sri Lanka."
         />
       </FadeIn>
 

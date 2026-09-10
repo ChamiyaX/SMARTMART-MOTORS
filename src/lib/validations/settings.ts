@@ -32,6 +32,20 @@ export const companySettingsSchema = z.object({
 
 export const messagingSettingsSchema = z.object({
   enabled: z.boolean(),
+  whatsapp: z.string().trim().min(9, "Enter a valid WhatsApp number").optional(),
+});
+
+const dayHoursField = z.string().max(120).optional();
+
+export const businessHoursSchema = z.object({
+  monday: dayHoursField,
+  tuesday: dayHoursField,
+  wednesday: dayHoursField,
+  thursday: dayHoursField,
+  friday: dayHoursField,
+  saturday: dayHoursField,
+  sunday: dayHoursField,
+  note: z.string().max(500).optional(),
 });
 
 export const socialSettingsSchema = z.object({
@@ -45,4 +59,5 @@ export const socialSettingsSchema = z.object({
 export type UpsertSettingInput = z.infer<typeof upsertSettingSchema>;
 export type CompanySettingsInput = z.infer<typeof companySettingsSchema>;
 export type MessagingSettingsInput = z.infer<typeof messagingSettingsSchema>;
+export type BusinessHoursInput = z.infer<typeof businessHoursSchema>;
 export type SocialSettingsInput = z.infer<typeof socialSettingsSchema>;

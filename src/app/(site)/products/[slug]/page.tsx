@@ -15,8 +15,8 @@ import {
   getRelatedProducts,
   incrementProductView,
 } from "@/lib/data/products";
-import { getMessagingSettings } from "@/lib/data/settings";
-import { getWhatsAppLink, SITE_CONFIG } from "@/lib/constants";
+import { getCompanySettings, getMessagingSettings } from "@/lib/data/settings";
+import { buildWhatsAppLink, SITE_CONFIG } from "@/lib/constants";
 import { formatPrice, resolveMediaUrl } from "@/lib/utils";
 import { breadcrumbJsonLd, generateSeoMetadata, productJsonLd } from "@/lib/seo";
 import { safeQuery } from "@/lib/safe";
@@ -50,9 +50,15 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
   const product = serializeProduct(raw);
   void safeQuery(() => incrementProductView(raw.id), null);
 
-  const [relatedRaw, messaging] = await Promise.all([
+  const [relatedRaw, messaging, company] = await Promise.all([
     safeQuery(() => getRelatedProducts(raw.id, raw.categoryId, 4), []),
     safeQuery(() => getMessagingSettings(), { enabled: true }),
+    safeQuery(() => getCompanySettings(), {
+      name: SITE_CONFIG.name,
+      phone: SITE_CONFIG.phone,
+      email: SITE_CONFIG.email,
+      whatsapp: SITE_CONFIG.whatsapp,
+    }),
   ]);
   const related = serializeProducts(relatedRaw);
 
@@ -65,7 +71,8 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
           ? "LimitedAvailability"
           : "InStock";
 
-  const waMessage = `Hi ${SITE_CONFIG.name}, I'm interested in "${product.name}" (SKU: ${product.sku}). Is it available?`;
+  const waMessage = `Hi ${company.name}, I'm interested in "${product.name}" (SKU: ${product.sku}). Is it available?`;
+  const whatsappInquiryLink = buildWhatsAppLink(company.whatsapp, waMessage);
   const specs =
     product.specifications && typeof product.specifications === "object"
       ? Object.entries(product.specifications)
@@ -187,7 +194,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
                 className="h-12 w-full min-w-0 whitespace-normal px-4 sm:w-auto sm:whitespace-nowrap sm:px-8"
               >
                 <a
-                  href={getWhatsAppLink(waMessage)}
+                  href={whatsappInquiryLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

@@ -1,7 +1,18 @@
 import type { Prisma } from "@prisma/client";
 
+import {
+  type BusinessHours,
+  resolveBusinessHours,
+} from "@/lib/business-hours";
 import { prisma } from "@/lib/prisma";
 import { SITE_CONFIG } from "@/lib/constants";
+
+export type { BusinessHours } from "@/lib/business-hours";
+export {
+  BUSINESS_HOUR_DAYS,
+  BUSINESS_HOUR_LABELS,
+  DEFAULT_BUSINESS_HOURS,
+} from "@/lib/business-hours";
 
 export async function getSetting<T = unknown>(key: string): Promise<T | null> {
   const setting = await prisma.setting.findUnique({ where: { key } });
@@ -33,6 +44,14 @@ export type CompanySettings = {
   registration?: string;
 };
 
+export type SocialSettings = {
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  tiktok?: string;
+  linkedin?: string;
+};
+
 export type MessagingSettings = {
   enabled: boolean;
 };
@@ -40,6 +59,27 @@ export type MessagingSettings = {
 export async function getMessagingSettings(): Promise<MessagingSettings> {
   const value = await getSetting<MessagingSettings>("messaging");
   return { enabled: value?.enabled !== false };
+}
+
+export async function getSocialSettings(): Promise<SocialSettings> {
+  const value = await getSetting<SocialSettings>("social");
+
+  return {
+    facebook: value?.facebook || SITE_CONFIG.social.facebook || "",
+    instagram: value?.instagram || SITE_CONFIG.social.instagram || "",
+    youtube: value?.youtube || SITE_CONFIG.social.youtube || "",
+    tiktok: value?.tiktok || "",
+    linkedin: value?.linkedin || "",
+  };
+}
+
+export async function getBusinessHours(): Promise<BusinessHours> {
+  const [businessHours, legacyHours] = await Promise.all([
+    getSetting<Partial<BusinessHours>>("business_hours"),
+    getSetting<{ weekdays?: string; saturday?: string; sunday?: string }>("hours"),
+  ]);
+
+  return resolveBusinessHours(businessHours, legacyHours);
 }
 
 export async function getCompanySettings(): Promise<CompanySettings> {

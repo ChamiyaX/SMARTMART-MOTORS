@@ -16,7 +16,7 @@ export const DEFAULT_HOME_STATS: HomeStatsContent = {
   title: "Proven on the road",
   description: "Figures that reflect a community of drivers who trust SmartMart Motors.",
   items: [
-    { label: "Parts in catalog", value: 2500, suffix: "+" },
+    { label: "Models in catalog", value: 2500, suffix: "+" },
     { label: "Happy customers", value: 1800, suffix: "+" },
     { label: "Brands stocked", value: 60, suffix: "+" },
     { label: "Years of service", value: 8, suffix: "+" },
