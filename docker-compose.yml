@@ -30,7 +30,7 @@ services:
       AUTH_URL: http://localhost:3000
       NEXTAUTH_URL: http://localhost:3000
       NEXT_PUBLIC_APP_URL: http://localhost:3000
-      NEXT_PUBLIC_SITE_PHONE: "0775475141"
+      NEXT_PUBLIC_SITE_PHONE: "0317506660"
       NEXT_PUBLIC_SITE_EMAIL: smartmartmotors@gmail.com
       NEXT_PUBLIC_SITE_WHATSAPP: "94775475141"
     depends_on:

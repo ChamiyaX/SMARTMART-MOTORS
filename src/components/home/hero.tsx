@@ -15,7 +15,7 @@ type HeroProps = {
 
 export function Hero({
   messagingEnabled = true,
-  phone = "0775475141",
+  phone = "0317506660",
   tagline = SITE_CONFIG.tagline,
 }: HeroProps) {
   return (

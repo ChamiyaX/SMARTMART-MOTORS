@@ -8,7 +8,7 @@ export const SITE_TAGLINE =
 export const SITE_URL =
   process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-export const SITE_PHONE = process.env.NEXT_PUBLIC_SITE_PHONE || "0775475141";
+export const SITE_PHONE = process.env.NEXT_PUBLIC_SITE_PHONE || "0317506660";
 
 export const SITE_EMAIL =
   process.env.NEXT_PUBLIC_SITE_EMAIL || "smartmartmotors@gmail.com";

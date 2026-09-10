@@ -25,7 +25,7 @@ type NavbarProps = {
 
 export function Navbar({
   messagingEnabled = true,
-  phone = "0775475141",
+  phone = "0317506660",
   whatsappLink = "https://wa.me/94775475141",
 }: NavbarProps) {
   const pathname = usePathname();

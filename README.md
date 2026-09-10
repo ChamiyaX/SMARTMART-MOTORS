@@ -11,7 +11,7 @@ Built with Next.js 15, React 19, TypeScript, Tailwind CSS, Prisma, Supabase Post
 - Prisma + PostgreSQL schema with Supabase SQL/RLS migrations
 - NextAuth credentials auth (JWT), protected `/admin` routes, security headers
 - Cloudinary image uploads, SEO (sitemap, robots, JSON-LD helpers), GA4/GTM/Clarity hooks
-- Contact form with rate limiting, WhatsApp CTA (`0775475141`)
+- Contact form with rate limiting, WhatsApp CTA (`0317506660`)
 
 ## Stack
 
@@ -118,7 +118,7 @@ supabase/migrations/
 
 ## Company
 
-- **Phone:** 0775475141
+- **Phone:** 0317506660
 - **Email:** smartmartmotors@gmail.com
 - **WhatsApp:** [wa.me/94775475141](https://wa.me/94775475141)
 

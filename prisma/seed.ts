@@ -746,7 +746,7 @@ async function main() {
         name: "SmartMart Motors",
         tagline: "Best Electric Tricycle for Your Needs",
         address: "Colombo, Sri Lanka",
-        phone: "0775475141",
+        phone: "0317506660",
         email: "smartmartmotors@gmail.com",
         whatsapp: "94775475141",
         registration: "",
@@ -1005,7 +1005,7 @@ async function main() {
     {
       question: "How can I confirm fitment for my vehicle?",
       answer:
-        "Send your chassis number, model year and part photo via WhatsApp to 0775475141 or use the product inquiry form. Our team verifies compatibility before you pay.",
+        "Send your chassis number, model year and part photo via WhatsApp to 0317506660 or use the product inquiry form. Our team verifies compatibility before you pay.",
       category: "products",
       sortOrder: 3,
     },
@@ -1040,7 +1040,7 @@ async function main() {
     {
       question: "How do I track my order?",
       answer:
-        "Once dispatched we share tracking details via SMS or WhatsApp. For urgent updates call 0775475141 during business hours.",
+        "Once dispatched we share tracking details via SMS or WhatsApp. For urgent updates call 0317506660 during business hours.",
       category: "shipping",
       sortOrder: 8,
     },
